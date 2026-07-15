@@ -9,7 +9,7 @@
   "plugins": {
     "updater": {
       "endpoints": ["https://raw.githubusercontent.com/Baz-Studios-LLC/baz-studios-launcher/main/updater.json"],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyMDJDQjM3RjQ4NkE5MzAKUldRd3FZYjBOOHNDSWxPN2pSU2V1cWtvU1c4T0pSekZ1WDZrSWwwT2k1eHFBNXR2aHFJSUdFL1EK"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ5NTExQTMwMTM3MjREMkMKUldRc1RYSVRNQnBSU1RxckltcnZKbVB0VFlFV212ZHdiZlkyUmM2YmE1SVhXd2V4THpaNnUxRnYK"
     }
   },
   "app": {
