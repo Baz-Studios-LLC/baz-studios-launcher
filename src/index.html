@@ -130,10 +130,36 @@
   .spin{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;border:2px solid rgba(150,160,190,.3);border-top-color:var(--ink);animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .fade{animation:fade .32s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* launcher-update popup */
+  .modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(4,5,10,.66);backdrop-filter:blur(6px);animation:fade .25s ease}
+  .modal[hidden]{display:none}
+  .mcard{--aRGB:123,60,255;width:360px;max-width:86vw;padding:26px 26px 22px;text-align:center;border-radius:18px;
+    background:linear-gradient(180deg,rgba(24,26,38,.97),rgba(13,15,23,.97));border:1px solid rgba(var(--aRGB),.4);
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.8),0 0 60px -22px rgba(var(--aRGB),.55);animation:mpop .3s cubic-bezier(.2,.7,.2,1)}
+  @keyframes mpop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+  .micon{width:52px;height:52px;margin:0 auto 14px;border-radius:14px;display:grid;place-items:center;font-size:24px;font-weight:800;color:#fff;
+    background:conic-gradient(from 210deg,#7b3cff,#2a86ff,#ff3bd0,#7b3cff);box-shadow:0 8px 22px -6px rgba(123,60,255,.7),inset 0 1px 0 rgba(255,255,255,.4)}
+  .mtitle{font-size:17px;font-weight:750}
+  .mver{font-size:12.5px;color:rgb(var(--aRGB));filter:brightness(1.35);margin-top:4px;font-weight:600}
+  .mtext{font-size:12.5px;color:var(--muted);line-height:1.5;margin:10px 6px 18px}
+  .mbtns{display:flex;gap:10px;justify-content:center}
+  .mprog{margin:16px 2px 0}
 </style>
 </head>
 <body>
   <div class="bg"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div><div class="vig"></div></div>
+
+  <div class="modal" id="lupd" hidden>
+    <div class="mcard">
+      <div class="micon">↑</div>
+      <div class="mtitle">Launcher update available</div>
+      <div class="mver" id="lupdver"></div>
+      <div class="mtext">A newer version of the Baz Studios launcher is ready. Download it now to stay current.</div>
+      <div class="mbtns"><button class="btn light" id="lupdgo">Download Now</button><button class="btn ghost" id="lupdlater">Later</button></div>
+      <div class="prog mprog" id="lupdprog"><div class="bar"></div></div>
+    </div>
+  </div>
   <div class="app">
     <header>
       <div class="brand"><div class="logo"></div><div class="wm"><div class="n">BAZ STUDIOS</div><div class="t">Game Launcher</div></div></div>
@@ -165,13 +191,15 @@
   const busy = {};
   let pollTimer = null;
 
-  async function checkSelfUpdate(){
-    if (!REAL) return false;
-    try { const v = await invoke("self_update_check"); if (!v) return false;
-      el("selfstat").innerHTML = `<span class="spin"></span> Updating launcher to v${v}…`;
-      await invoke("self_update_install"); return true;
-    } catch { return false; }
+  // Launcher self-update: NEVER auto-relaunch on boot (that open→close→reopen was jarring). Instead,
+  // if a newer launcher is published, surface a popup with a "Download Now" button — the relaunch
+  // only happens when the player opts in.
+  let selfShown = false;
+  async function checkLauncherUpdate(){
+    if (!REAL || selfShown) return;
+    try { const v = await invoke("self_update_check"); if (v){ selfShown = true; showLauncherUpdate(v); } } catch {}
   }
+  function showLauncherUpdate(v){ el("lupdver").textContent = "Version " + v + " is ready to install."; el("lupd").hidden = false; }
 
   // ---- sidebar ----
   function buildSidebar(){
@@ -184,11 +212,13 @@
       tab.innerHTML = `<div class="mono" data-thumb>${esc(mono(g.info.name))}</div>
         <div class="gi"><div class="gn">${esc(g.info.name)}</div><div class="gs" data-gs>Checking…</div></div>
         <span class="sdot" data-sdot></span>`;
-      // try the real logo as the tile image; keep the monogram if there's none
+      // fill the tile with a square icon if one exists (prefer a dedicated <slug>-icon.png, then the
+      // main art if it's square); otherwise keep the monogram. A wide wordmark won't read at 36px.
       const thumb = tab.querySelector("[data-thumb]");
-      const img = new Image();
-      img.onload = () => { if (img.naturalWidth/img.naturalHeight < 1.6){ thumb.innerHTML=""; thumb.appendChild(img); } }; // only square-ish art fills the tile nicely
-      img.src = `assets/${slug}.png`;
+      const tryImg = (srcs) => { if (!srcs.length) return; const im = new Image();
+        im.onload = () => { if (im.naturalWidth/im.naturalHeight < 1.6){ thumb.innerHTML=""; thumb.appendChild(im); } else tryImg(srcs.slice(1)); };
+        im.onerror = () => tryImg(srcs.slice(1)); im.src = srcs[0]; };
+      tryImg([`assets/${slug}-icon.png`, `assets/${slug}.png`]);
       tab.onclick = () => selectGame(slug);
       tabs.appendChild(tab);
     }
@@ -250,10 +280,9 @@
     const mk = (label, cls, on, ic) => { const b=document.createElement("button"); b.className="btn"+cls; b.innerHTML=(ic?`<span class="ic">${ic}</span>`:"")+label; if(on)b.onclick=on; else b.disabled=true; return b; };
     bar.innerHTML = `<div class="prog" data-prog><div class="bar"></div></div><div class="err" data-err></div>`;
     if (s.loading){ /* just the spinner in chips */ }
-    else if (s.installed && s.latest && verNewer(s.latest, s.installed)){
-      bar.appendChild(mk("Update",btnLight,()=>doUpdate(false),"↓")); bar.appendChild(mk("Play"," ghost",()=>doPlay()));
-    } else if (s.installed){ bar.appendChild(mk("Play",btnLight,()=>doPlay(),"▶")); }
-    else if (s.latest){ bar.appendChild(mk("Install & Play",btnLight,()=>doUpdate(true),"↓")); }
+    else if (s.installed && s.latest && verNewer(s.latest, s.installed)){ bar.appendChild(mk("Update",btnLight,()=>doUpdate(),"↓")); } // becomes Play once the update lands
+    else if (s.installed){ bar.appendChild(mk("Play",btnLight,()=>doPlay(),"▶")); }
+    else if (s.latest){ bar.appendChild(mk("Install",btnLight,()=>doUpdate(),"↓")); } // becomes Play once installed
     else { bar.appendChild(mk("Coming Soon","",null)); }
   }
   const detailBusyUI = (label) => { const d=el("detail"); const bar=d.querySelector("[data-actbar]"); if(!bar) return;
@@ -282,10 +311,10 @@
     catch { g.state.latest = null; g.state.notes = ""; }
     g.state.loading = false; updateTab(slug); if (slug===selected) renderDetail();
   }
-  async function doUpdate(thenPlay){
+  async function doUpdate(){
     const slug = selected, g = games[slug]; busy[slug]=true; detailBusyUI("");
     try { await invoke("install",{slug,url:g.state.url,version:g.state.latest}); g.state.installed = g.state.latest;
-      if (thenPlay) return doPlay(); busy[slug]=false; updateTab(slug); renderDetail();
+      busy[slug]=false; updateTab(slug); renderDetail(); // now installed==latest -> the button becomes Play
     } catch(e){ busy[slug]=false; updateTab(slug); renderDetail(); setErr("Update failed: "+String(e).slice(0,70)); }
   }
   async function doPlay(){
@@ -295,7 +324,7 @@
   }
   async function poll(){
     if (Object.values(busy).some(Boolean)) return;
-    if (REAL){ try { if (await invoke("self_update_check")){ await checkSelfUpdate(); return; } } catch {} }
+    if (REAL) checkLauncherUpdate();
     for (const slug of order){ if (busy[slug]) continue;
       try { const info = await invoke("check_latest",{slug}); const g=games[slug];
         if (info && info.version && (info.version!==g.state.latest)){ g.state.latest=info.version; g.state.url=info.url; g.state.notes=info.notes||""; updateTab(slug); if(slug===selected) renderDetail(); }
@@ -305,7 +334,7 @@
 
   async function boot(){
     try { el("lver").textContent = " · Launcher v"+await invoke("launcher_version"); } catch {}
-    if (await checkSelfUpdate()) return;
+    checkLauncherUpdate(); // non-blocking: a popup offers any launcher update (no auto-relaunch)
     el("selfstat").textContent = "";
     let list = []; try { list = await invoke("games"); } catch {}
     for (const info of list){ const rgb=hexRGB(info.accent); games[info.slug]={info,rgb,light:lum(rgb)<0.6,state:{loading:true,installed:null,latest:null,url:null,notes:""}}; order.push(info.slug); }
@@ -315,6 +344,15 @@
     if (!pollTimer) pollTimer = setInterval(poll, 120000);
   }
   el("site").onclick = (e)=>{ e.preventDefault(); if (REAL && T.opener && T.opener.openUrl) T.opener.openUrl("https://github.com/Baz-Studios-LLC"); };
+
+  // launcher-update popup
+  el("lupdlater").onclick = () => { el("lupd").hidden = true; }; // dismiss for this session
+  el("lupdgo").onclick = async () => {
+    el("lupdgo").disabled = true; el("lupdlater").disabled = true; el("lupdprog").classList.add("show");
+    el("lupdgo").innerHTML = `<span class="spin" style="border-top-color:#fff"></span> Downloading…`;
+    try { await invoke("self_update_install"); } // downloads + verifies + relaunches into the new launcher
+    catch(e){ el("lupdgo").disabled=false; el("lupdlater").disabled=false; el("lupdprog").classList.remove("show"); el("lupdgo").textContent="Retry"; }
+  };
 
   // ---- mock backend (browser preview) ----
   function mockInvoke(cmd,args){
