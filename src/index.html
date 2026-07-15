@@ -351,7 +351,8 @@
     if (cmd === "check_latest"){
       if (slug==="wriftheart") return wait(900, { version:"0.6.46", url:"#" });
       if (slug==="wingman")    return wait(900, { version:"0.1.0", url:"#" });
-      return wait(700, Promise.reject("no release")); // neondrift -> coming soon (native-only; no web bundle yet)
+      if (slug==="neondrift")  return wait(900, { version:"0.1.0", url:"#" });
+      return wait(700, Promise.reject("no release")); // any future game with no web bundle -> Coming soon
     }
     if (cmd === "install") return wait(2200);
     if (cmd === "play") return wait(1200, alert("(preview) would launch "+slug));
