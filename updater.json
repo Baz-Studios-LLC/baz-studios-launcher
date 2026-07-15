@@ -1,27 +1,27 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "notes": "The Baz Studios Launcher — keeps every game (and itself) updated, and runs them.",
-  "pub_date": "2026-07-15T12:46:36.338Z",
+  "pub_date": "2026-07-15T13:18:23.807Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWhqYURNUlQ2VXVPdzk2aGMrcnNKbkZRSmRCaVJjT3paV0F0dW8xalcvNCtmeXlvak05SnZYODMyUCs1ZHpsRjZPUDZDb0ZCZ0kzcjRYNWdtZy9qZ2dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5MzQ3CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5nego1M3VQbVNabDYwczRIUmVCS0JHYXdCWngyVnBRamZ4RFNZNGpmTytLMS92VkhDcWpNbGlaSVMvNzY0eEdQUkM3YTVXSTBFcGVsZjBnQVNnanJvTDlDUT09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWdLVWx5RTZZRWlFbG1QM29HTFdsRzFUTXdTb2tUVjFuSzBTeFpZaUs2UVhabEEvWm9lZmY4K2QvTmRRbDg2TFhEZDdhSUZ3NjVUeDQ3ZysyaXVrSlE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTIxNDIxCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpURG5HOExPK3RiZFIreWxwNTBVMGRtOFhrWTM5L1kyaWk1V2lOaGNVZG5NY0xPTFpHenA4dWJ6bW9uK0pheUlUUGg4alR4VlVKZ2tpODZ1SWZZZWtDdz09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.1/Baz.Studios_aarch64.app.tar.gz"
     },
     "darwin-aarch64-app": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWhqYURNUlQ2VXVPdzk2aGMrcnNKbkZRSmRCaVJjT3paV0F0dW8xalcvNCtmeXlvak05SnZYODMyUCs1ZHpsRjZPUDZDb0ZCZ0kzcjRYNWdtZy9qZ2dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5MzQ3CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5nego1M3VQbVNabDYwczRIUmVCS0JHYXdCWngyVnBRamZ4RFNZNGpmTytLMS92VkhDcWpNbGlaSVMvNzY0eEdQUkM3YTVXSTBFcGVsZjBnQVNnanJvTDlDUT09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWdLVWx5RTZZRWlFbG1QM29HTFdsRzFUTXdTb2tUVjFuSzBTeFpZaUs2UVhabEEvWm9lZmY4K2QvTmRRbDg2TFhEZDdhSUZ3NjVUeDQ3ZysyaXVrSlE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTIxNDIxCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpURG5HOExPK3RiZFIreWxwNTBVMGRtOFhrWTM5L1kyaWk1V2lOaGNVZG5NY0xPTFpHenA4dWJ6bW9uK0pheUlUUGg4alR4VlVKZ2tpODZ1SWZZZWtDdz09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.1/Baz.Studios_aarch64.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXVpZy80d1hENmpWS1FNQk1xdEhYcHV0STA0bFhpUnBXWTFpNlR2cU9Uejh3a3lwOFVJWXBVSzdqaUdsYkFJVkk4MkxGY244cnpZUnhMTVRUU2FBMUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0X2VuLVVTLm1zaQpyQVc3MGErUS9pSjVIT0hwWXM5VFJyazdxNFhhdmtDa2JSZEFUZVlKZkJQZ2ZtRXdXTzBNRlphRVF4YjlNQjF2K2VKT2IxMjFUYk00QTBOSkZEUzRDdz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXR4aFJ2MDlGbGFqc0FvdUt3eGkrR3J0UEQ4cmRNS053dzVDakQ3cEdhTmdxMVZnQStCbFVuQ0llMHdWdHNTelgxSXR3ZDVCRytkajg2VGk5bjRhS0FBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTIxNTAwCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjFfeDY0X2VuLVVTLm1zaQpTaU5hdjE2ZUU1RmJkVUczWlZobzNvek9EOHpxVUVrQjIzZCtjRnJicmpyOUs5c3lFdWtMcC9hSTZIVHFXdzByS3VXZU12K3NDRUs4eFRZbGFoOXhDUT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.1/Baz.Studios_0.1.1_x64_en-US.msi"
     },
     "windows-x86_64-msi": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXVpZy80d1hENmpWS1FNQk1xdEhYcHV0STA0bFhpUnBXWTFpNlR2cU9Uejh3a3lwOFVJWXBVSzdqaUdsYkFJVkk4MkxGY244cnpZUnhMTVRUU2FBMUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0X2VuLVVTLm1zaQpyQVc3MGErUS9pSjVIT0hwWXM5VFJyazdxNFhhdmtDa2JSZEFUZVlKZkJQZ2ZtRXdXTzBNRlphRVF4YjlNQjF2K2VKT2IxMjFUYk00QTBOSkZEUzRDdz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXR4aFJ2MDlGbGFqc0FvdUt3eGkrR3J0UEQ4cmRNS053dzVDakQ3cEdhTmdxMVZnQStCbFVuQ0llMHdWdHNTelgxSXR3ZDVCRytkajg2VGk5bjRhS0FBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTIxNTAwCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjFfeDY0X2VuLVVTLm1zaQpTaU5hdjE2ZUU1RmJkVUczWlZobzNvek9EOHpxVUVrQjIzZCtjRnJicmpyOUs5c3lFdWtMcC9hSTZIVHFXdzByS3VXZU12K3NDRUs4eFRZbGFoOXhDUT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.1/Baz.Studios_0.1.1_x64_en-US.msi"
     },
     "windows-x86_64-nsis": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXNlZERvclU0eXVTeGQzaFFLK09IcjI4RmdqZk1PdDB6NzNRWnVKbTl6VllwcVZQZGZERFlXQitQYkc1U2VoRzVVZU5aRGYwVFVFRFh4Q1hFODlJY3dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0LXNldHVwLmV4ZQpqVnVnaTIvcDBpTEUrMkpxdys5UHJtUDVqWmM5dUVJemtRVkVzK1FYWjNvZGc0eFcxRm9vZnkzQUNjMXUwUmFSbllkenQzQWRYd1Q4YWZWWG5oZlhEdz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWtiUm1xc000ZTduYUdiS0JucmFaUU1Qbk1TQTNTNUt5UnVPQVlvWmxEb0VvRG9Ra21YTktTUmhQRWZ0Q1pIczFtbld5bUJyekdSMlhHZDZ1RVI5ZkFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTIxNTAwCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjFfeDY0LXNldHVwLmV4ZQpIMUphWXlQMU1wNzVqWmRMTmRFbVp0VVFaMExTVlhZV2NETlRlS2VhWUNKRTU3Um5iTVBwRXlnMERGV2dRQ3VEMFVpWXNSOXgwWHEwL2xqcExSeHBEQT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.1/Baz.Studios_0.1.1_x64-setup.exe"
     }
   }
 }
