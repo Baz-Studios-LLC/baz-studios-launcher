@@ -55,8 +55,8 @@ const GAMES: &[Game] = &[
     },
     Game {
         slug: "neondrift",
-        name: "Neon Drift",
-        tagline: "Neon-soaked arcade drifting on the edge of the grid.",
+        name: "Neon Edge",
+        tagline: "Neon-soaked arcade action on the edge of the grid.",
         repo: "Baz-Studios-LLC/Neon-Drift",
         asset: "neondrift-game.zip",
         port: 47825,
