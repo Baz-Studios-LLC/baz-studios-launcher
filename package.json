@@ -1,6 +1,6 @@
 {
   "name": "baz-studios-launcher",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Baz Studios Launcher — one hub that checks GitHub for updates, downloads each game's bundle, and runs it.",
   "scripts": {
