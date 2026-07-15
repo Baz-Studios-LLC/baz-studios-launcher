@@ -96,6 +96,7 @@ fn games() -> Vec<GameInfo> {
             name: g.name.to_string(),
             tagline: g.tagline.to_string(),
             repo: g.repo.to_string(),
+            accent: g.accent.to_string(),
         })
         .collect()
 }
