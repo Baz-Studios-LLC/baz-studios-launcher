@@ -82,6 +82,7 @@
   .hero .htext{font-size:44px;font-weight:800;letter-spacing:.02em;color:#fff;text-shadow:0 6px 30px rgba(var(--aRGB),.75)}
 
   .dhead{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin:16px 2px 4px}
+  .dtitle .studio{font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgb(var(--aRGB));filter:brightness(1.25);opacity:.92;margin-bottom:6px}
   .dtitle .dn{font-size:23px;font-weight:770;letter-spacing:.01em}
   .dtitle .dt{font-size:13px;color:var(--muted);margin-top:4px;max-width:52ch;line-height:1.45}
   .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:0 0 auto}
@@ -225,7 +226,7 @@
     d.innerHTML = `
       <div class="hero" data-hero><span class="htext">${esc(g.info.name)}</span></div>
       <div class="dhead">
-        <div class="dtitle"><div class="dn">${esc(g.info.name)}</div><div class="dt">${esc(g.info.tagline)}</div></div>
+        <div class="dtitle"><div class="studio">New City Entertainment</div><div class="dn">${esc(g.info.name)}</div><div class="dt">${esc(g.info.tagline)}</div></div>
         <div class="chips">${chips}</div>
       </div>
       <div class="pnote">What's New</div>
