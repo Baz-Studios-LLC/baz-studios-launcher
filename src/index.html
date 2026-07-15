@@ -6,11 +6,11 @@
 <title>Baz Studios</title>
 <style>
   :root{
-    --bg0:#07080d; --bg1:#0b0d16; --bg2:#111420;
+    --bg0:#07080d; --bg1:#0b0d16;
     --ink:#eef0f8; --muted:#9498ab; --faint:#5a5f73;
-    --line:rgba(150,160,190,.12); --line-2:rgba(150,160,190,.20);
-    --card:rgba(20,23,34,.55);
+    --line:rgba(150,160,190,.12); --line-2:rgba(150,160,190,.22);
     --ok:#69e08a; --warn:#f2a24a;
+    --notes:#c6c9d6; --notes-b:#eceef6;
     font-synthesis:none; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
   *{box-sizing:border-box; margin:0; padding:0}
@@ -20,148 +20,129 @@
     color:var(--ink); background:var(--bg0); overflow:hidden; user-select:none; -webkit-user-select:none; cursor:default;
   }
 
-  /* ---- ambient background: deep gradient + slow drifting brand-colour blobs + fine grain ---- */
+  /* ambient background: deep gradient + drifting brand-colour blobs */
   .bg{position:fixed; inset:0; z-index:0; overflow:hidden;
-    background:radial-gradient(135% 115% at 50% -18%, #15182600 0%, var(--bg0) 62%),
-               radial-gradient(120% 100% at 50% -10%, #171a2b 0%, var(--bg1) 46%, var(--bg0) 100%)}
-  .blob{position:absolute; border-radius:50%; filter:blur(70px); opacity:.24; mix-blend-mode:screen}
-  .blob.a{width:46vw; height:46vw; left:-8vw; top:-14vw; background:#7b3cff; animation:drift1 26s ease-in-out infinite}
-  .blob.b{width:40vw; height:40vw; right:-10vw; top:-6vw; background:#2a86ff; animation:drift2 32s ease-in-out infinite}
-  .blob.c{width:44vw; height:44vw; left:34vw; bottom:-24vw; background:#ff3bd0; opacity:.16; animation:drift3 30s ease-in-out infinite}
-  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,4vw) scale(1.08)}}
-  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-5vw,5vw) scale(1.05)}}
-  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-4vw,-5vw) scale(1.1)}}
-  .grain{position:absolute; inset:0; opacity:.05; background-image:
-      radial-gradient(1px 1px at 20% 30%, #fff, transparent),
-      radial-gradient(1px 1px at 70% 22%, #fff, transparent),
-      radial-gradient(1px 1px at 42% 66%, #fff, transparent),
-      radial-gradient(1px 1px at 82% 74%, #fff, transparent),
-      radial-gradient(1px 1px at 12% 82%, #fff, transparent)}
-  .vig{position:absolute; inset:0; background:radial-gradient(130% 100% at 50% 35%, transparent 58%, rgba(0,0,0,.5))}
+    background:radial-gradient(130% 110% at 50% -16%, #16192a 0%, var(--bg1) 46%, var(--bg0) 100%)}
+  .blob{position:absolute; border-radius:50%; filter:blur(80px); opacity:.20; mix-blend-mode:screen}
+  .blob.a{width:44vw;height:44vw;left:-10vw;top:-14vw;background:#7b3cff;animation:d1 28s ease-in-out infinite}
+  .blob.b{width:40vw;height:40vw;right:-12vw;top:-8vw;background:#2a86ff;animation:d2 34s ease-in-out infinite}
+  .blob.c{width:42vw;height:42vw;left:40vw;bottom:-24vw;background:#ff3bd0;opacity:.13;animation:d3 30s ease-in-out infinite}
+  @keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(5vw,4vw) scale(1.06)}}
+  @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-4vw,5vw) scale(1.05)}}
+  @keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(-4vw,-5vw) scale(1.08)}}
+  .vig{position:absolute; inset:0; background:radial-gradient(130% 100% at 50% 30%, transparent 60%, rgba(0,0,0,.55))}
 
   .app{position:relative; z-index:10; height:100%; display:flex; flex-direction:column}
 
-  /* ---- header ---- */
-  header{flex:0 0 auto; display:flex; align-items:center; justify-content:space-between;
-    padding:26px 34px 14px}
-  .brand{display:flex; align-items:center; gap:13px}
-  .logo{width:34px; height:34px; border-radius:9px; position:relative; flex:0 0 auto;
-    background:conic-gradient(from 210deg, #7b3cff, #2a86ff, #ff3bd0, #7b3cff);
-    box-shadow:0 6px 20px rgba(123,60,255,.4), inset 0 1px 0 rgba(255,255,255,.35)}
-  .logo::after{content:""; position:absolute; inset:6px; border-radius:5px; background:var(--bg0);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-  .logo::before{content:"B"; position:absolute; inset:0; display:grid; place-items:center; z-index:1;
-    font-weight:800; font-size:16px; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.5)}
-  .wordmark{line-height:1}
-  .wordmark .n{font-size:18px; font-weight:800; letter-spacing:.18em}
-  .wordmark .t{font-size:9.5px; font-weight:600; letter-spacing:.42em; color:var(--muted); margin-top:3px; text-transform:uppercase}
-  .selfstat{font-size:11px; letter-spacing:.06em; color:var(--faint); display:flex; align-items:center; gap:7px; min-height:16px}
+  /* header */
+  header{flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:20px 26px 14px}
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{width:32px;height:32px;border-radius:9px;position:relative;flex:0 0 auto;
+    background:conic-gradient(from 210deg,#7b3cff,#2a86ff,#ff3bd0,#7b3cff);
+    box-shadow:0 6px 18px rgba(123,60,255,.4), inset 0 1px 0 rgba(255,255,255,.35)}
+  .logo::after{content:"";position:absolute;inset:6px;border-radius:5px;background:var(--bg0);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .logo::before{content:"B";position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-weight:800;font-size:15px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+  .wm .n{font-size:16px;font-weight:800;letter-spacing:.2em;line-height:1}
+  .wm .t{font-size:9px;font-weight:600;letter-spacing:.44em;color:var(--muted);margin-top:3px;text-transform:uppercase}
+  .selfstat{font-size:11px;letter-spacing:.05em;color:var(--faint);display:flex;align-items:center;gap:7px}
 
-  /* ---- library ---- */
-  .lib{flex:1 1 auto; min-height:0; overflow-y:auto; padding:10px 34px 30px}
-  .lib::-webkit-scrollbar{width:10px}
-  .lib::-webkit-scrollbar-thumb{background:rgba(150,160,190,.18); border-radius:10px; border:3px solid transparent; background-clip:content-box}
-  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; max-width:1160px; margin:0 auto}
+  /* main split */
+  .main{flex:1 1 auto; min-height:0; display:flex; gap:0}
 
-  .card{--aRGB:150,160,190; position:relative; display:flex; flex-direction:column;
-    background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden;
-    backdrop-filter:blur(10px); box-shadow:0 18px 40px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.04);
-    transition:transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .28s, border-color .28s; opacity:0; animation:rise .5s ease forwards}
-  @keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
-  .card:hover{transform:translateY(-5px); border-color:rgba(var(--aRGB),.5);
-    box-shadow:0 30px 60px -22px rgba(var(--aRGB),.5), 0 10px 24px -14px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06)}
+  /* sidebar */
+  .side{flex:0 0 258px; min-height:0; overflow-y:auto; padding:6px 14px 18px 20px; display:flex; flex-direction:column; gap:6px}
+  .side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:rgba(150,160,190,.16);border-radius:8px}
+  .sidehead{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint);margin:6px 4px 4px}
+  .gtab{--aRGB:150,160,190; display:flex; align-items:center; gap:12px; padding:9px 11px; border-radius:12px; cursor:pointer;
+    border:1px solid transparent; transition:background .16s, border-color .16s; position:relative}
+  .gtab:hover{background:rgba(255,255,255,.035)}
+  .gtab.sel{background:linear-gradient(90deg, rgba(var(--aRGB),.16), rgba(var(--aRGB),.05)); border-color:rgba(var(--aRGB),.35)}
+  .gtab.sel::before{content:"";position:absolute;left:-1px;top:9px;bottom:9px;width:3px;border-radius:3px;background:rgb(var(--aRGB));box-shadow:0 0 10px rgba(var(--aRGB),.8)}
+  .mono{width:36px;height:36px;flex:0 0 auto;border-radius:10px;display:grid;place-items:center;
+    font-weight:800;font-size:14px;letter-spacing:.02em;color:#fff;
+    background:linear-gradient(145deg, rgba(var(--aRGB),.95), rgba(var(--aRGB),.55));
+    box-shadow:0 4px 12px -4px rgba(var(--aRGB),.7), inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 3px rgba(0,0,0,.4);overflow:hidden}
+  .mono img{width:100%;height:100%;object-fit:cover}
+  .gtab .gi{flex:1 1 auto; min-width:0}
+  .gtab .gn{font-size:13.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gtab .gs{font-size:10.5px;color:var(--muted);margin-top:1px;letter-spacing:.02em}
+  .gtab.sel .gs{color:rgba(255,255,255,.7)}
+  .sdot{width:7px;height:7px;border-radius:50%;flex:0 0 auto;background:var(--faint)}
+  .sdot.ok{background:var(--ok);box-shadow:0 0 7px var(--ok)}
+  .sdot.up{background:var(--warn);box-shadow:0 0 7px var(--warn)}
 
-  /* art / cover */
-  .cover{position:relative; height:168px; display:grid; place-items:center; overflow:hidden;
-    background:
-      radial-gradient(120% 150% at 50% 8%, rgba(var(--aRGB),.34), transparent 66%),
-      linear-gradient(180deg, rgba(var(--aRGB),.12), rgba(6,7,13,.35))}
-  .cover::after{content:""; position:absolute; inset:0; box-shadow:inset 0 -40px 40px -30px rgba(6,7,13,.9); pointer-events:none}
-  .cover .sheen{position:absolute; top:-60%; left:-30%; width:60%; height:220%; transform:rotate(18deg);
-    background:linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); transition:left .6s ease}
-  .card:hover .cover .sheen{left:130%}
-  .cover img{max-width:80%; max-height:120px; object-fit:contain; filter:drop-shadow(0 6px 20px rgba(var(--aRGB),.55));
-    transition:transform .3s ease; image-rendering:auto}
-  .card:hover .cover img{transform:scale(1.04)}
-  .cover.mark img{max-height:110px; max-width:110px}
-  .cover.wordmark img{max-height:62px; max-width:82%}
-  /* typographic fallback when a game has no art file */
-  .cover .fallback{font-size:30px; font-weight:800; letter-spacing:.02em; color:#fff;
-    text-shadow:0 4px 24px rgba(var(--aRGB),.7)}
+  /* detail */
+  .detail{--aRGB:150,160,190; flex:1 1 auto; min-width:0; min-height:0; display:flex; flex-direction:column; padding:2px 26px 18px 12px}
+  .hero{position:relative; height:186px; flex:0 0 auto; border-radius:18px; overflow:hidden; display:grid; place-items:center;
+    background:radial-gradient(120% 150% at 50% 6%, rgba(var(--aRGB),.34), transparent 66%), linear-gradient(180deg, rgba(var(--aRGB),.14), rgba(6,7,13,.45));
+    border:1px solid rgba(var(--aRGB),.22)}
+  .hero::after{content:"";position:absolute;inset:0;box-shadow:inset 0 -44px 44px -32px rgba(6,7,13,.95)}
+  .hero img{max-width:70%;max-height:132px;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(var(--aRGB),.6))}
+  .hero.wordmark img{max-height:74px}
+  .hero .htext{font-size:44px;font-weight:800;letter-spacing:.02em;color:#fff;text-shadow:0 6px 30px rgba(var(--aRGB),.75)}
 
-  .body{padding:15px 17px 16px; display:flex; flex-direction:column; gap:9px; flex:1 1 auto}
-  .name{font-size:17px; font-weight:750; letter-spacing:.01em}
-  .tag{font-size:12.5px; line-height:1.45; color:var(--muted);
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:36px}
-
-  .meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:24px; margin-top:1px}
-  .chip{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; letter-spacing:.02em;
-    padding:4px 10px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); background:rgba(8,10,18,.5)}
-  .chip b{color:var(--ink); font-weight:650}
-  .chip.up{color:#ffe6c2; border-color:rgba(242,162,74,.45); background:rgba(60,42,20,.35)}
-  .chip.soon{color:var(--faint)}
-  .dot{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok)}
-  .dot.up{background:var(--warn); box-shadow:0 0 8px var(--warn); animation:pulse 1.5s ease-in-out infinite}
-  .dot.off{background:var(--faint); box-shadow:none}
+  .dhead{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin:16px 2px 4px}
+  .dtitle .dn{font-size:23px;font-weight:770;letter-spacing:.01em}
+  .dtitle .dt{font-size:13px;color:var(--muted);margin-top:4px;max-width:52ch;line-height:1.45}
+  .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:0 0 auto}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.02em;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2);color:var(--muted);background:rgba(8,10,18,.5);white-space:nowrap}
+  .chip b{color:var(--ink);font-weight:650}
+  .chip.up{color:#ffe6c2;border-color:rgba(242,162,74,.45);background:rgba(60,42,20,.35)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .dot.up{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:pulse 1.5s ease-in-out infinite}
+  .dot.off{background:var(--faint);box-shadow:none}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .arr{color:var(--faint); font-size:11px}
+  .arr{color:var(--faint);font-size:11px}
 
-  /* progress (indeterminate) */
-  .prog{height:6px; border-radius:999px; background:rgba(6,8,16,.7); overflow:hidden; border:1px solid var(--line);
-    max-height:0; opacity:0; transition:.3s; margin-top:2px}
-  .prog.show{max-height:14px; opacity:1}
-  .prog .bar{height:100%; width:36%; border-radius:999px;
-    background:linear-gradient(90deg, rgba(var(--aRGB),.4), rgba(var(--aRGB),1), rgba(255,255,255,.9));
-    box-shadow:0 0 12px rgba(var(--aRGB),.7); animation:slide 1.15s ease-in-out infinite}
+  .pnote{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint);margin:16px 2px 8px}
+  .notes{flex:1 1 auto; min-height:0; overflow-y:auto; font-size:12.5px; color:var(--notes); line-height:1.55; padding:0 12px 4px 13px; border-left:2px solid rgba(var(--aRGB),.4)}
+  .notes::-webkit-scrollbar{width:8px}.notes::-webkit-scrollbar-thumb{background:rgba(150,160,190,.16);border-radius:8px}
+  .notes .nh{color:rgb(var(--aRGB));font-weight:700;margin:9px 0 3px;filter:brightness(1.25)}
+  .notes .nh:first-child{margin-top:0}
+  .notes .nb{padding-left:13px;text-indent:-8px;margin:2px 0}
+  .notes .nb::before{content:"› ";color:rgb(var(--aRGB));filter:brightness(1.3)}
+  .notes .np{margin:3px 0}.notes .nsp{height:7px}
+  .notes b{color:var(--notes-b);font-weight:700}
+  .notes .empty{color:var(--faint);font-style:italic}
+
+  /* action bar */
+  .actbar{flex:0 0 auto; margin-top:14px; display:flex; align-items:center; gap:11px}
+  .prog{flex:1 1 auto; height:6px; border-radius:999px; background:rgba(6,8,16,.7); overflow:hidden; border:1px solid var(--line); max-width:0; opacity:0; transition:.3s}
+  .prog.show{max-width:100%;opacity:1}
+  .prog .bar{height:100%;width:36%;border-radius:999px;background:linear-gradient(90deg,rgba(var(--aRGB),.4),rgba(var(--aRGB),1),rgba(255,255,255,.9));box-shadow:0 0 12px rgba(var(--aRGB),.7);animation:slide 1.15s ease-in-out infinite}
   @keyframes slide{0%{margin-left:-40%}100%{margin-left:100%}}
-
-  .actions{display:flex; gap:9px; margin-top:4px}
-  button{font:inherit; cursor:pointer; border:0}
-  .btn{flex:1 1 auto; position:relative; overflow:hidden; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-    font-size:12.5px; color:#0b0c12; padding:11px 14px; border-radius:11px;
-    background:linear-gradient(180deg, rgba(var(--aRGB),1), rgba(var(--aRGB),.72));
-    box-shadow:0 8px 20px -8px rgba(var(--aRGB),.7), inset 0 1px 0 rgba(255,255,255,.4);
-    transition:transform .12s, box-shadow .2s, filter .2s}
-  .btn:hover{transform:translateY(-1px); filter:brightness(1.06); box-shadow:0 12px 26px -8px rgba(var(--aRGB),.85), inset 0 1px 0 rgba(255,255,255,.5)}
+  .err{flex:1 1 auto;font-size:11.5px;color:var(--warn);line-height:1.4}
+  button{font:inherit;cursor:pointer;border:0}
+  .btn{position:relative;overflow:hidden;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;color:#0b0c12;
+    padding:12px 26px;border-radius:11px;background:linear-gradient(180deg,rgba(var(--aRGB),1),rgba(var(--aRGB),.72));
+    box-shadow:0 8px 20px -8px rgba(var(--aRGB),.7),inset 0 1px 0 rgba(255,255,255,.4);transition:transform .12s,box-shadow .2s,filter .2s}
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
   .btn:active{transform:translateY(1px)}
-  .btn.light{color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.4)} /* on darker accents keep label legible */
-  .btn.ghost{flex:0 0 auto; background:rgba(20,24,38,.6); color:var(--muted); border:1px solid var(--line-2);
-    box-shadow:none; padding:11px 15px}
-  .btn.ghost:hover{color:var(--ink); border-color:rgba(var(--aRGB),.5); background:rgba(30,36,56,.6); filter:none}
-  .btn[disabled]{opacity:.45; cursor:default; pointer-events:none; filter:grayscale(.4)}
-  .btn .ic{margin-right:6px; font-size:11px; vertical-align:0}
+  .btn.light{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+  .btn.ghost{background:rgba(20,24,38,.6);color:var(--muted);border:1px solid var(--line-2);box-shadow:none}
+  .btn.ghost:hover{color:var(--ink);border-color:rgba(var(--aRGB),.5);filter:none}
+  .btn[disabled]{opacity:.45;cursor:default;pointer-events:none;filter:grayscale(.4)}
+  .btn .ic{margin-right:7px;font-size:11px}
 
-  .err{font-size:11.5px; color:var(--warn); min-height:0; line-height:1.4}
-
-  .spin{display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:-2px;
-    border:2px solid rgba(150,160,190,.3); border-top-color:var(--ink); animation:spin .8s linear infinite}
+  footer{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 26px 16px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  footer a{color:var(--faint);text-decoration:none}footer a:hover{color:var(--ink)}
+  .spin{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;border:2px solid rgba(150,160,190,.3);border-top-color:var(--ink);animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ---- footer ---- */
-  footer{flex:0 0 auto; display:flex; justify-content:space-between; align-items:center;
-    padding:12px 34px 18px; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint)}
-  footer a{color:var(--faint); text-decoration:none}
-  footer a:hover{color:var(--ink)}
+  .fade{animation:fade .32s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-  <div class="bg"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div><div class="grain"></div><div class="vig"></div></div>
-
+  <div class="bg"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div><div class="vig"></div></div>
   <div class="app">
     <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="wordmark"><div class="n">BAZ STUDIOS</div><div class="t">Game Launcher</div></div>
-      </div>
+      <div class="brand"><div class="logo"></div><div class="wm"><div class="n">BAZ STUDIOS</div><div class="t">Game Launcher</div></div></div>
       <div class="selfstat" id="selfstat"></div>
     </header>
-
-    <main class="lib"><div class="grid" id="grid"></div></main>
-
-    <footer>
-      <span>© Baz Studios<span id="lver"></span></span>
-      <a id="site" href="#">github.com/Baz-Studios-LLC</a>
-    </footer>
+    <main class="main">
+      <nav class="side"><div class="sidehead">Library</div><div id="tabs"></div></nav>
+      <section class="detail" id="detail"></section>
+    </main>
+    <footer><span>© Baz Studios<span id="lver"></span></span><a id="site" href="#">github.com/Baz-Studios-LLC</a></footer>
   </div>
 
 <script>
@@ -171,194 +152,191 @@
   const REAL = !!(T && T.core && T.core.invoke);
   const invoke = REAL ? T.core.invoke : mockInvoke;
   const el = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const verNewer = (a,b)=>{const p=s=>String(s||"0").replace(/^v/,"").split(".").map(n=>parseInt(n,10)||0);const x=p(a),y=p(b);for(let i=0;i<3;i++){if((x[i]||0)>(y[i]||0))return true;if((x[i]||0)<(y[i]||0))return false;}return false;};
+  const hexRGB=(h)=>{const n=parseInt(String(h||"#96a0be").slice(1),16);return [(n>>16)&255,(n>>8)&255,n&255];};
+  const lum=(r)=>(0.299*r[0]+0.587*r[1]+0.114*r[2])/255;
+  const mono=(name)=>name.replace(/[^a-z]/gi,"").slice(0,2).toUpperCase();
 
-  const verNewer = (a, b) => { const p = s => String(s||"0").replace(/^v/,"").split(".").map(n=>parseInt(n,10)||0);
-    const x=p(a), y=p(b); for (let i=0;i<3;i++){ if((x[i]||0)>(y[i]||0))return true; if((x[i]||0)<(y[i]||0))return false; } return false; };
-  // hex -> "r,g,b" for rgba(var(--aRGB), a); luminance picks readable button-label colour.
-  const hexRGB = (h) => { const n=parseInt(String(h||"#96a0be").slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; };
-  const lum = (rgb) => (0.299*rgb[0]+0.587*rgb[1]+0.114*rgb[2])/255;
-
-  const cards = {};          // slug -> { info, els, state }
-  let busy = {};             // slug -> true while that game is downloading/launching
+  const games = {};   // slug -> { info, rgb, light, state:{loading,installed,latest,url,notes} }
+  let order = [];      // slugs in catalog order
+  let selected = null; // slug
+  const busy = {};
   let pollTimer = null;
 
-  // ---- self-update: keep the launcher itself current (silent, in the header) ----
   async function checkSelfUpdate(){
     if (!REAL) return false;
-    try {
-      const v = await invoke("self_update_check");
-      if (!v) return false;
+    try { const v = await invoke("self_update_check"); if (!v) return false;
       el("selfstat").innerHTML = `<span class="spin"></span> Updating launcher to v${v}…`;
-      await invoke("self_update_install"); // installs + relaunches
-      return true;
+      await invoke("self_update_install"); return true;
     } catch { return false; }
   }
 
-  function cardTemplate(info){
-    const rgb = hexRGB(info.accent);
-    const light = lum(rgb) < 0.6; // dark accent -> white label
-    const card = document.createElement("section");
-    card.className = "card";
-    card.style.setProperty("--aRGB", rgb.join(","));
-    card.innerHTML = `
-      <div class="cover" data-cover><span class="sheen"></span></div>
-      <div class="body">
-        <div class="name">${esc(info.name)}</div>
-        <div class="tag">${esc(info.tagline)}</div>
-        <div class="meta" data-meta></div>
-        <div class="prog" data-prog><div class="bar"></div></div>
-        <div class="actions" data-actions></div>
-        <div class="err" data-err></div>
-      </div>`;
-    // cover art (falls back to a typographic monogram if the image is missing)
-    const cover = card.querySelector("[data-cover]");
-    const img = new Image();
-    img.alt = info.name;
-    img.onload = () => { cover.classList.add(img.naturalWidth / img.naturalHeight >= 2 ? "wordmark" : "mark"); cover.appendChild(img); };
-    img.onerror = () => { const f=document.createElement("div"); f.className="fallback"; f.textContent=info.name.split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase(); cover.appendChild(f); };
-    img.src = `assets/${info.slug}.png`;
-    return {
-      card,
-      cover, light,
-      meta: card.querySelector("[data-meta]"),
-      prog: card.querySelector("[data-prog]"),
-      actions: card.querySelector("[data-actions]"),
-      err: card.querySelector("[data-err]"),
-    };
-  }
-
-  const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-
-  function setMeta(c, html){ c.els.meta.innerHTML = html; }
-  function setErr(c, msg){ c.els.err.textContent = msg || ""; }
-  function showProg(c, on){ c.els.prog.classList.toggle("show", on); }
-  function setButtons(c, list){
-    c.els.actions.innerHTML = "";
-    for (const b of list){
-      const btn = document.createElement("button");
-      btn.className = "btn" + (b.ghost ? " ghost" : (c.els.light ? " light" : ""));
-      btn.innerHTML = (b.ic ? `<span class="ic">${b.ic}</span>` : "") + b.label;
-      if (b.disabled) btn.disabled = true; else btn.onclick = b.onClick;
-      c.els.actions.appendChild(btn);
+  // ---- sidebar ----
+  function buildSidebar(){
+    const tabs = el("tabs"); tabs.innerHTML = "";
+    for (const slug of order){
+      const g = games[slug];
+      const tab = document.createElement("div");
+      tab.className = "gtab"; tab.dataset.slug = slug;
+      tab.style.setProperty("--aRGB", g.rgb.join(","));
+      tab.innerHTML = `<div class="mono" data-thumb>${esc(mono(g.info.name))}</div>
+        <div class="gi"><div class="gn">${esc(g.info.name)}</div><div class="gs" data-gs>Checking…</div></div>
+        <span class="sdot" data-sdot></span>`;
+      // try the real logo as the tile image; keep the monogram if there's none
+      const thumb = tab.querySelector("[data-thumb]");
+      const img = new Image();
+      img.onload = () => { if (img.naturalWidth/img.naturalHeight < 1.6){ thumb.innerHTML=""; thumb.appendChild(img); } }; // only square-ish art fills the tile nicely
+      img.src = `assets/${slug}.png`;
+      tab.onclick = () => selectGame(slug);
+      tabs.appendChild(tab);
     }
   }
+  function updateTab(slug){
+    const g = games[slug], tab = el("tabs").querySelector(`[data-slug="${slug}"]`); if (!tab) return;
+    const s = g.state, gs = tab.querySelector("[data-gs]"), dot = tab.querySelector("[data-sdot]");
+    tab.classList.toggle("sel", slug === selected);
+    if (s.loading){ gs.textContent = "Checking…"; dot.className = "sdot"; return; }
+    const up = s.installed && s.latest && verNewer(s.latest, s.installed);
+    if (s.installed && up){ gs.textContent = "Update available"; dot.className = "sdot up"; }
+    else if (s.installed){ gs.textContent = "Installed · Ready"; dot.className = "sdot ok"; }
+    else if (s.latest){ gs.textContent = "Ready to install"; dot.className = "sdot ok"; }
+    else { gs.textContent = "Coming soon"; dot.className = "sdot"; }
+  }
 
-  function render(c){
-    const { installed, latest } = c.state;
-    setErr(c, "");
-    if (c.state.loading){
-      setMeta(c, `<span class="chip"><span class="spin" style="width:10px;height:10px;border-width:2px"></span> Checking…</span>`);
-      setButtons(c, [{ label:"…", disabled:true }]);
-      return;
-    }
+  // ---- detail ----
+  function selectGame(slug){ selected = slug; order.forEach(updateTab); renderDetail(); }
+
+  function renderDetail(){
+    const g = games[selected]; if (!g) return;
+    const s = g.state, d = el("detail");
+    d.style.setProperty("--aRGB", g.rgb.join(","));
+    const btnLight = g.light ? " light" : "";
+    d.classList.remove("fade"); void d.offsetWidth; d.classList.add("fade");
+
     // chips
-    let chip = "";
-    if (installed){
-      const up = latest && verNewer(latest, installed);
-      chip = `<span class="chip"><span class="dot ${up?'up':''}"></span>Installed <b>v${installed}</b></span>`;
-      if (up) chip += `<span class="arr">→</span><span class="chip up"><b>v${latest}</b> ready</span>`;
-    } else if (latest){
-      chip = `<span class="chip"><span class="dot off"></span>Not installed</span><span class="arr">→</span><span class="chip"><b>v${latest}</b></span>`;
-    } else {
-      chip = `<span class="chip soon"><span class="dot off"></span>Coming soon</span>`;
-    }
-    setMeta(c, chip);
-    // buttons
-    if (installed && latest && verNewer(latest, installed)){
-      setButtons(c, [ { label:"Update", ic:"↓", onClick:()=>doUpdate(c,false) }, { label:"Play", ghost:true, onClick:()=>doPlay(c) } ]);
-    } else if (installed){
-      setButtons(c, [ { label:"Play", ic:"▶", onClick:()=>doPlay(c) } ]);
-    } else if (latest){
-      setButtons(c, [ { label:"Install & Play", ic:"↓", onClick:()=>doUpdate(c,true) } ]);
-    } else {
-      setButtons(c, [ { label:"Coming Soon", disabled:true } ]);
-    }
+    let chips = "";
+    if (s.loading) chips = `<span class="chip"><span class="spin" style="width:10px;height:10px;border-width:2px"></span> Checking…</span>`;
+    else if (s.installed){ const up = s.latest && verNewer(s.latest, s.installed);
+      chips = `<span class="chip"><span class="dot ${up?'up':''}"></span>Installed <b>v${s.installed}</b></span>` + (up?`<span class="arr">→</span><span class="chip up"><b>v${s.latest}</b> ready</span>`:"");
+    } else if (s.latest){ chips = `<span class="chip"><span class="dot off"></span>Not installed</span><span class="arr">→</span><span class="chip"><b>v${s.latest}</b></span>`; }
+    else chips = `<span class="chip"><span class="dot off"></span>Coming soon</span>`;
+
+    d.innerHTML = `
+      <div class="hero" data-hero><span class="htext">${esc(g.info.name)}</span></div>
+      <div class="dhead">
+        <div class="dtitle"><div class="dn">${esc(g.info.name)}</div><div class="dt">${esc(g.info.tagline)}</div></div>
+        <div class="chips">${chips}</div>
+      </div>
+      <div class="pnote">What's New</div>
+      <div class="notes" data-notes></div>
+      <div class="actbar" data-actbar></div>`;
+
+    // hero art (fall back to the wordmark text already in place)
+    const hero = d.querySelector("[data-hero]");
+    const img = new Image(); img.alt = g.info.name;
+    img.onload = () => { hero.classList.add(img.naturalWidth/img.naturalHeight >= 2 ? "wordmark":"mark"); hero.innerHTML=""; hero.appendChild(img); };
+    img.src = `assets/${selected}.png`;
+
+    // notes
+    const notes = d.querySelector("[data-notes]");
+    if (s.loading) notes.innerHTML = `<div class="empty">Loading…</div>`;
+    else if (!s.latest && !s.installed) notes.innerHTML = `<div class="empty">This game isn't available yet — coming soon.</div>`;
+    else notes.innerHTML = (s.notes||"").trim() ? renderNotes(s.notes) : `<div class="empty">No patch notes to show.</div>`;
+
+    // actions
+    const bar = d.querySelector("[data-actbar]");
+    const mk = (label, cls, on, ic) => { const b=document.createElement("button"); b.className="btn"+cls; b.innerHTML=(ic?`<span class="ic">${ic}</span>`:"")+label; if(on)b.onclick=on; else b.disabled=true; return b; };
+    bar.innerHTML = `<div class="prog" data-prog><div class="bar"></div></div><div class="err" data-err></div>`;
+    if (s.loading){ /* just the spinner in chips */ }
+    else if (s.installed && s.latest && verNewer(s.latest, s.installed)){
+      bar.appendChild(mk("Update",btnLight,()=>doUpdate(false),"↓")); bar.appendChild(mk("Play"," ghost",()=>doPlay()));
+    } else if (s.installed){ bar.appendChild(mk("Play",btnLight,()=>doPlay(),"▶")); }
+    else if (s.latest){ bar.appendChild(mk("Install & Play",btnLight,()=>doUpdate(true),"↓")); }
+    else { bar.appendChild(mk("Coming Soon","",null)); }
+  }
+  const detailBusyUI = (label) => { const d=el("detail"); const bar=d.querySelector("[data-actbar]"); if(!bar) return;
+    bar.querySelector("[data-prog]").classList.add("show"); const err=bar.querySelector("[data-err]"); if(err)err.textContent=label||"";
+    bar.querySelectorAll(".btn").forEach(b=>b.remove()); };
+  const setErr = (msg) => { const e=el("detail").querySelector("[data-err]"); if(e){ e.textContent=msg||""; } };
+
+  // ---- patch-notes markdown ----
+  const mdInline=(s)=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  function renderNotes(md){
+    const out=[]; let cur=null; const flush=()=>{if(cur){out.push('<div class="'+cur.cls+'">'+mdInline(cur.text)+'</div>');cur=null;}};
+    for (const raw of md.split("\n")){ const line=raw.replace(/\s+$/,""); let m;
+      if(!line){flush();out.push('<div class="nsp"></div>');}
+      else if((m=line.match(/^#{1,3}\s+(.*)/))){flush();out.push('<div class="nh">'+mdInline(m[1])+'</div>');}
+      else if((m=line.match(/^[-*]\s+(.*)/))){flush();cur={cls:"nb",text:m[1]};}
+      else if(cur)cur.text+=" "+line.replace(/^\s+/,"");
+      else cur={cls:"np",text:line.replace(/^\s+/,"")};
+    } flush(); return out.join("");
   }
 
-  async function refresh(c){
-    c.state.loading = true; render(c);
-    try { c.state.installed = await invoke("installed_version", { slug:c.info.slug }); } catch { c.state.installed = null; }
-    try { const info = await invoke("check_latest", { slug:c.info.slug }); c.state.latest = info.version; c.state.url = info.url; }
-    catch { c.state.latest = null; } // private/no-release/offline -> Coming soon (or Play if already installed)
-    c.state.loading = false; render(c);
+  // ---- data + actions ----
+  async function refresh(slug){
+    const g = games[slug]; g.state.loading = true; updateTab(slug); if (slug===selected) renderDetail();
+    try { g.state.installed = await invoke("installed_version",{slug}); } catch { g.state.installed = null; }
+    try { const info = await invoke("check_latest",{slug}); g.state.latest = info.version; g.state.url = info.url; g.state.notes = info.notes||""; }
+    catch { g.state.latest = null; g.state.notes = ""; }
+    g.state.loading = false; updateTab(slug); if (slug===selected) renderDetail();
   }
-
-  async function doUpdate(c, thenPlay){
-    busy[c.info.slug] = true; setButtons(c, []); showProg(c, true); setErr(c,"");
-    try {
-      await invoke("install", { slug:c.info.slug, url:c.state.url, version:c.state.latest });
-      c.state.installed = c.state.latest;
-      if (thenPlay) return doPlay(c);
-      showProg(c, false); busy[c.info.slug]=false; render(c);
-    } catch (e){
-      showProg(c, false); busy[c.info.slug]=false; render(c);
-      setErr(c, "Update failed: " + String(e).slice(0,70));
-    }
+  async function doUpdate(thenPlay){
+    const slug = selected, g = games[slug]; busy[slug]=true; detailBusyUI("");
+    try { await invoke("install",{slug,url:g.state.url,version:g.state.latest}); g.state.installed = g.state.latest;
+      if (thenPlay) return doPlay(); busy[slug]=false; updateTab(slug); renderDetail();
+    } catch(e){ busy[slug]=false; updateTab(slug); renderDetail(); setErr("Update failed: "+String(e).slice(0,70)); }
   }
-
-  async function doPlay(c){
-    busy[c.info.slug] = true; setButtons(c, [{label:"Launching…", disabled:true}]); showProg(c, true); setErr(c,"");
-    try { await invoke("play", { slug:c.info.slug }); /* Rust reconfigures this window + opens the game */ }
-    catch (e){
-      showProg(c, false); busy[c.info.slug]=false; render(c);
-      setErr(c, "Couldn't launch: " + String(e).slice(0,70));
-    }
+  async function doPlay(){
+    const slug = selected; busy[slug]=true; detailBusyUI("");
+    try { await invoke("play",{slug}); }
+    catch(e){ busy[slug]=false; renderDetail(); setErr("Couldn't launch: "+String(e).slice(0,70)); }
   }
-
-  // background poll: quietly re-check installed/latest so new builds surface on their own
   async function poll(){
-    if (await hasAnyBusy()) return;
+    if (Object.values(busy).some(Boolean)) return;
     if (REAL){ try { if (await invoke("self_update_check")){ await checkSelfUpdate(); return; } } catch {} }
-    for (const slug in cards){ const c = cards[slug]; if (busy[slug]) continue;
-      try { const info = await invoke("check_latest", { slug }); if (info && info.version && info.version !== c.state.latest){ c.state.latest = info.version; c.state.url = info.url; render(c); } } catch {}
+    for (const slug of order){ if (busy[slug]) continue;
+      try { const info = await invoke("check_latest",{slug}); const g=games[slug];
+        if (info && info.version && (info.version!==g.state.latest)){ g.state.latest=info.version; g.state.url=info.url; g.state.notes=info.notes||""; updateTab(slug); if(slug===selected) renderDetail(); }
+      } catch {}
     }
   }
-  const hasAnyBusy = async () => Object.values(busy).some(Boolean);
 
   async function boot(){
-    try { el("lver").textContent = " · Launcher v" + await invoke("launcher_version"); } catch {}
-    if (await checkSelfUpdate()) return; // relaunching into the new launcher
+    try { el("lver").textContent = " · Launcher v"+await invoke("launcher_version"); } catch {}
+    if (await checkSelfUpdate()) return;
     el("selfstat").textContent = "";
-    let list = [];
-    try { list = await invoke("games"); } catch {}
-    const grid = el("grid"); grid.innerHTML = "";
-    list.forEach((info, i) => {
-      const els = cardTemplate(info);
-      els.card.style.animationDelay = (i*70) + "ms";
-      grid.appendChild(els.card);
-      const c = { info, els, state:{ loading:true, installed:null, latest:null, url:null } };
-      cards[info.slug] = c;
-      render(c);
-      refresh(c);
-    });
+    let list = []; try { list = await invoke("games"); } catch {}
+    for (const info of list){ const rgb=hexRGB(info.accent); games[info.slug]={info,rgb,light:lum(rgb)<0.6,state:{loading:true,installed:null,latest:null,url:null,notes:""}}; order.push(info.slug); }
+    buildSidebar();
+    if (order.length){ selected = order[0]; order.forEach(updateTab); renderDetail(); }
+    order.forEach(refresh);
     if (!pollTimer) pollTimer = setInterval(poll, 120000);
   }
+  el("site").onclick = (e)=>{ e.preventDefault(); if (REAL && T.opener && T.opener.openUrl) T.opener.openUrl("https://github.com/Baz-Studios-LLC"); };
 
-  el("site").onclick = (e) => { e.preventDefault(); if (REAL && T.opener && T.opener.openUrl) T.opener.openUrl("https://github.com/Baz-Studios-LLC"); };
-
-  // ---- mock backend (plain-browser preview via ?mock=) -----------------------------------------
-  function mockInvoke(cmd, args){
-    const wait = (ms,v)=>new Promise(r=>setTimeout(()=>r(v),ms));
-    const slug = args && args.slug;
-    if (cmd === "launcher_version") return wait(40, "0.1.0");
-    if (cmd === "self_update_check") return wait(40, null);
-    if (cmd === "games") return wait(60, [
-      { slug:"wriftheart", name:"WriftHeart", tagline:"An 8-bit action-RPG of a shattered world. Gather the ten shards; mend the Wriftheart.", repo:"Baz-Studios-LLC/wriftheart", accent:"#b06cff" },
-      { slug:"wingman", name:"Wingman", tagline:"A twin-stick shooter where you fly two ships at once.", repo:"Baz-Studios-LLC/Wingman", accent:"#3a86ff" },
-      { slug:"neondrift", name:"Neon Edge", tagline:"Neon-soaked arcade action on the edge of the grid.", repo:"Baz-Studios-LLC/Neon-Drift", accent:"#ff3bd0" },
+  // ---- mock backend (browser preview) ----
+  function mockInvoke(cmd,args){
+    const wait=(ms,v)=>new Promise(r=>setTimeout(()=>r(v),ms)); const slug=args&&args.slug;
+    if (cmd==="launcher_version") return wait(40,"0.1.1");
+    if (cmd==="self_update_check") return wait(40,null);
+    if (cmd==="games") return wait(50,[
+      {slug:"wriftheart",name:"WriftHeart",tagline:"An 8-bit action-RPG of a shattered world. Gather the ten shards; mend the Wriftheart.",repo:"Baz-Studios-LLC/wriftheart",accent:"#b06cff"},
+      {slug:"wingman",name:"Wingman",tagline:"A twin-stick shooter where you fly two ships at once.",repo:"Baz-Studios-LLC/Wingman",accent:"#3a86ff"},
+      {slug:"neondrift",name:"Neon Edge",tagline:"Neon-soaked arcade action on the edge of the grid.",repo:"Baz-Studios-LLC/Neon-Drift",accent:"#ff3bd0"},
+      {slug:"crashout",name:"Crashout",tagline:"An isometric office-survival game — hold it together before you crash out.",repo:"Baz-Studios-LLC/Crashout",accent:"#ff5a34"},
     ]);
-    if (cmd === "installed_version") return wait(500, slug==="wriftheart" ? "0.6.45" : null);
-    if (cmd === "check_latest"){
-      if (slug==="wriftheart") return wait(900, { version:"0.6.46", url:"#" });
-      if (slug==="wingman")    return wait(900, { version:"0.1.0", url:"#" });
-      if (slug==="neondrift")  return wait(900, { version:"0.1.0", url:"#" });
-      return wait(700, Promise.reject("no release")); // any future game with no web bundle -> Coming soon
+    if (cmd==="installed_version") return wait(500, slug==="wriftheart"?"0.6.45":null);
+    if (cmd==="check_latest"){
+      if (slug==="wriftheart") return wait(800,{version:"0.6.46",url:"#",notes:"## v0.6.46 — The Shard Held High\n- **Claiming a Wriftheart shard is now a moment** — held aloft with lore.\n- Songs must be learned before you can play them.\n- The Songbook no longer opens on a blank page."});
+      if (slug==="wingman") return wait(800,{version:"0.1.0",url:"#",notes:"## Wingman v0.1.0\n- First playable build in the launcher.\n- Twin-ship twin-stick action."});
+      if (slug==="neondrift") return wait(800,{version:"0.1.0",url:"#",notes:"## Neon Edge v0.1.0\n- First playable build.\n- Neon arcade action on the grid."});
+      return wait(700, Promise.reject("no release")); // crashout -> coming soon
     }
-    if (cmd === "install") return wait(2200);
-    if (cmd === "play") return wait(1200, alert("(preview) would launch "+slug));
-    return wait(200);
+    if (cmd==="install") return wait(2000);
+    if (cmd==="play") return wait(1000, alert("(preview) would launch "+slug));
+    return wait(150);
   }
-
   boot();
 })();
 </script>

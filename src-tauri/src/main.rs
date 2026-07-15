@@ -62,6 +62,15 @@ const GAMES: &[Game] = &[
         port: 47825,
         accent: "#ff3bd0",
     },
+    Game {
+        slug: "crashout",
+        name: "Crashout",
+        tagline: "An isometric office-survival game — hold it together before you crash out.",
+        repo: "Baz-Studios-LLC/Crashout",
+        asset: "crashout-game.zip",
+        port: 47826,
+        accent: "#ff5a34",
+    },
 ];
 
 fn game_by_slug(slug: &str) -> Option<&'static Game> {
