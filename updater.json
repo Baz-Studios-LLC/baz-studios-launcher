@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "notes": "The Baz Studios Launcher — keeps every game (and itself) updated, and runs them.",
+  "pub_date": "2026-07-15T12:46:36.338Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWhqYURNUlQ2VXVPdzk2aGMrcnNKbkZRSmRCaVJjT3paV0F0dW8xalcvNCtmeXlvak05SnZYODMyUCs1ZHpsRjZPUDZDb0ZCZ0kzcjRYNWdtZy9qZ2dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5MzQ3CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5nego1M3VQbVNabDYwczRIUmVCS0JHYXdCWngyVnBRamZ4RFNZNGpmTytLMS92VkhDcWpNbGlaSVMvNzY0eEdQUkM3YTVXSTBFcGVsZjBnQVNnanJvTDlDUT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_aarch64.app.tar.gz"
+    },
+    "darwin-aarch64-app": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWhqYURNUlQ2VXVPdzk2aGMrcnNKbkZRSmRCaVJjT3paV0F0dW8xalcvNCtmeXlvak05SnZYODMyUCs1ZHpsRjZPUDZDb0ZCZ0kzcjRYNWdtZy9qZ2dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5MzQ3CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5nego1M3VQbVNabDYwczRIUmVCS0JHYXdCWngyVnBRamZ4RFNZNGpmTytLMS92VkhDcWpNbGlaSVMvNzY0eEdQUkM3YTVXSTBFcGVsZjBnQVNnanJvTDlDUT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_aarch64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXVpZy80d1hENmpWS1FNQk1xdEhYcHV0STA0bFhpUnBXWTFpNlR2cU9Uejh3a3lwOFVJWXBVSzdqaUdsYkFJVkk4MkxGY244cnpZUnhMTVRUU2FBMUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0X2VuLVVTLm1zaQpyQVc3MGErUS9pSjVIT0hwWXM5VFJyazdxNFhhdmtDa2JSZEFUZVlKZkJQZ2ZtRXdXTzBNRlphRVF4YjlNQjF2K2VKT2IxMjFUYk00QTBOSkZEUzRDdz09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64_en-US.msi"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXVpZy80d1hENmpWS1FNQk1xdEhYcHV0STA0bFhpUnBXWTFpNlR2cU9Uejh3a3lwOFVJWXBVSzdqaUdsYkFJVkk4MkxGY244cnpZUnhMTVRUU2FBMUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0X2VuLVVTLm1zaQpyQVc3MGErUS9pSjVIT0hwWXM5VFJyazdxNFhhdmtDa2JSZEFUZVlKZkJQZ2ZtRXdXTzBNRlphRVF4YjlNQjF2K2VKT2IxMjFUYk00QTBOSkZEUzRDdz09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64_en-US.msi"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXNlZERvclU0eXVTeGQzaFFLK09IcjI4RmdqZk1PdDB6NzNRWnVKbTl6VllwcVZQZGZERFlXQitQYkc1U2VoRzVVZU5aRGYwVFVFRFh4Q1hFODlJY3dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MTE5NTkyCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjBfeDY0LXNldHVwLmV4ZQpqVnVnaTIvcDBpTEUrMkpxdys5UHJtUDVqWmM5dUVJemtRVkVzK1FYWjNvZGc0eFcxRm9vZnkzQUNjMXUwUmFSbllkenQzQWRYd1Q4YWZWWG5oZlhEdz09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.0/Baz.Studios_0.1.0_x64-setup.exe"
+    }
+  }
+}
