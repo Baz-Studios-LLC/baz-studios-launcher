@@ -1,0 +1,85 @@
+name: Release
+
+# Build + publish the Baz Studios Launcher for macOS and Windows, then commit the signed updater
+# manifest so installed launchers can self-update.
+# Actions -> Release -> Run workflow -> enter a tag like "v0.1.0".
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v0.1.0)'
+        required: true
+        default: 'v0.1.0'
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest    # .dmg / .app (Apple Silicon)
+          - platform: windows-latest  # .msi / .exe
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install deps
+        run: npm install
+
+      - name: Build + publish launcher
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Sign the update artifacts so the running launcher can verify them (minisign keypair;
+          # public half is baked into tauri.conf.json). Reuse the studio's existing keypair.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.event.inputs.tag }}
+          releaseName: Baz Studios Launcher ${{ github.event.inputs.tag }}
+          releaseBody: 'The Baz Studios Launcher — keeps every game (and itself) updated, and runs them.'
+          releaseDraft: false
+          prerelease: false
+
+  # After both platforms publish, copy tauri-action's merged latest.json (every platform's signed
+  # entry) to a STABLE path on main — the endpoint the installed launcher polls.
+  manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Publish updater manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "${{ github.event.inputs.tag }}" -R "${{ github.repository }}" -p latest.json -D _m --clobber
+          cp _m/latest.json updater.json
+          echo "----- updater.json -----"; cat updater.json
+      - name: Commit manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add updater.json
+          git commit -m "launcher: updater manifest for ${{ github.event.inputs.tag }}" || { echo "no change"; exit 0; }
+          git push origin main
