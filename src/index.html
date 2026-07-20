@@ -319,7 +319,13 @@
   }
   async function doPlay(){
     const slug = selected; busy[slug]=true; detailBusyUI("");
-    try { await invoke("play",{slug}); }
+    try {
+      await invoke("play",{slug});
+      // A NATIVE game launches as its own process and returns here, leaving this window on
+      // the library — so clear the launch bar and restore the Play button (otherwise it
+      // spins forever). A WEB game navigates this window into the game, so this is moot there.
+      busy[slug]=false; renderDetail();
+    }
     catch(e){ busy[slug]=false; renderDetail(); setErr("Couldn't launch: "+String(e).slice(0,70)); }
   }
   async function poll(){
