@@ -13,7 +13,8 @@
 use std::collections::HashSet;
 use std::fs;
 use std::io::Cursor;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::sync::{Arc, Mutex};
 
 use serde::Serialize;
@@ -21,17 +22,56 @@ use tauri::{Manager, State, WindowEvent};
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
 
 // ---- The Baz Studios catalog (baked in) ----------------------------------------------------------
-// Add a game: one row here. `repo` must be PUBLIC and each of its releases must attach `asset`
-// (its web bundle, zipped) — a game with no such published release just shows "Coming soon". Each
-// game gets its OWN fixed port so their saves never share an origin.
+// Add a game: one row here. `repo` must be PUBLIC and each release must attach the delivery's asset.
+// A game has one of two DELIVERIES:
+//   * Web    — a pure-web bundle (index.html + js/, zipped). Downloaded, unpacked, and served over a
+//              fixed localhost port INSIDE this launcher's webview (its own save origin).
+//   * Native — a real platform executable (a Bevy game, etc.), per OS. Downloaded, unpacked, and
+//              LAUNCHED as its own process; the game runs in its own window, this stays the library.
+// Either way, no published release with the right asset = the card shows "Coming soon".
+enum Delivery {
+    /// A web bundle served in-webview over `port` (a stable save origin).
+    Web { asset: &'static str, port: u16 },
+    /// A native build per platform — the launcher installs and spawns it.
+    Native { mac: &'static str, windows: &'static str },
+}
+
+impl Delivery {
+    /// The release-asset name to fetch for the platform we're running on.
+    fn asset(&self) -> &'static str {
+        match self {
+            Delivery::Web { asset, .. } => asset,
+            Delivery::Native { mac, windows } => native_pick(mac, windows),
+        }
+    }
+}
+
+/// The native asset for the current OS (mac / windows; falls back to the mac name elsewhere).
+fn native_pick(mac: &'static str, windows: &'static str) -> &'static str {
+    #[cfg(target_os = "macos")]
+    {
+        let _ = windows;
+        mac
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let _ = mac;
+        windows
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let _ = windows;
+        mac
+    }
+}
+
 struct Game {
-    slug: &'static str,    // stable id (folder name, UI key)
-    name: &'static str,    // display name
-    tagline: &'static str, // one-line blurb on the card
-    repo: &'static str,    // owner/name on GitHub (must be public)
-    asset: &'static str,   // the release asset the launcher downloads (the web bundle)
-    port: u16,             // fixed localhost port -> stable save origin
-    accent: &'static str,  // brand colour (hex) — drives the card's gradient / glow in the UI
+    slug: &'static str,        // stable id (folder name, UI key)
+    name: &'static str,        // display name
+    tagline: &'static str,     // one-line blurb on the card
+    repo: &'static str,        // owner/name on GitHub (must be public)
+    accent: &'static str,      // brand colour (hex) — drives the card's gradient / glow in the UI
+    delivery: Delivery,        // web bundle vs native build
 }
 
 const GAMES: &[Game] = &[
@@ -40,36 +80,36 @@ const GAMES: &[Game] = &[
         name: "WriftHeart",
         tagline: "An 8-bit action-RPG of a shattered world. Gather the ten shards; mend the Wriftheart.",
         repo: "Baz-Studios-LLC/wriftheart",
-        asset: "wriftheart-game.zip",
-        port: 47823,
         accent: "#b06cff",
+        // The Rust + Bevy rewrite ships as a native build per platform.
+        delivery: Delivery::Native {
+            mac: "WriftHeart-macos-aarch64.app.tar.gz",
+            windows: "WriftHeart-windows-x86_64.zip",
+        },
     },
     Game {
         slug: "wingman",
         name: "Wingman",
         tagline: "A twin-stick shooter where you fly two ships at once.",
         repo: "Baz-Studios-LLC/Wingman",
-        asset: "wingman-game.zip",
-        port: 47824,
         accent: "#3a86ff",
+        delivery: Delivery::Web { asset: "wingman-game.zip", port: 47824 },
     },
     Game {
         slug: "neondrift",
         name: "Neon Edge",
         tagline: "Neon-soaked arcade action on the edge of the grid.",
         repo: "Baz-Studios-LLC/Neon-Drift",
-        asset: "neondrift-game.zip",
-        port: 47825,
         accent: "#ff3bd0",
+        delivery: Delivery::Web { asset: "neondrift-game.zip", port: 47825 },
     },
     Game {
         slug: "crashout",
         name: "Crashout",
         tagline: "An isometric office-survival game — hold it together before you crash out.",
         repo: "Baz-Studios-LLC/Crashout",
-        asset: "crashout-game.zip",
-        port: 47826,
         accent: "#ff5a34",
+        delivery: Delivery::Web { asset: "crashout-game.zip", port: 47826 },
     },
 ];
 
@@ -189,7 +229,7 @@ async fn check_latest(slug: String) -> Result<Latest, String> {
         if rel["draft"].as_bool() == Some(true) || rel["prerelease"].as_bool() == Some(true) {
             continue;
         }
-        if let Some(url) = bundle_url(rel, game.asset) {
+        if let Some(url) = bundle_url(rel, game.delivery.asset()) {
             let version = rel["tag_name"]
                 .as_str()
                 .unwrap_or("")
@@ -224,44 +264,84 @@ async fn install(
     }
     let bytes = resp.bytes().await.map_err(|e| e.to_string())?;
 
+    // Web bundles + Windows native builds ship as .zip; macOS native builds ship as a
+    // .app packed in .tar.gz (a zip mangles the bundle's symlinks + exec bits).
+    let is_tar = url.ends_with(".tar.gz") || url.ends_with(".tgz");
     let dir2 = dir.clone();
     tauri::async_runtime::spawn_blocking(move || -> Result<(), String> {
         if dir2.exists() {
             fs::remove_dir_all(&dir2).map_err(|e| e.to_string())?;
         }
         fs::create_dir_all(&dir2).map_err(|e| e.to_string())?;
-        let mut archive = zip::ZipArchive::new(Cursor::new(bytes)).map_err(|e| e.to_string())?;
-        archive.extract(&dir2).map_err(|e| e.to_string())?;
+        if is_tar {
+            // Unpack via the system `tar` (present on macOS, the only place tar assets land) —
+            // it preserves the .app's exec bits and structure that a Rust zip reader wouldn't.
+            let tmp = dir2.join("__download.tar.gz");
+            fs::write(&tmp, &bytes).map_err(|e| e.to_string())?;
+            let status = Command::new("tar")
+                .arg("-xzf")
+                .arg(&tmp)
+                .arg("-C")
+                .arg(&dir2)
+                .status()
+                .map_err(|e| e.to_string())?;
+            let _ = fs::remove_file(&tmp);
+            if !status.success() {
+                return Err("failed to unpack the game archive".into());
+            }
+        } else {
+            let mut archive = zip::ZipArchive::new(Cursor::new(bytes)).map_err(|e| e.to_string())?;
+            archive.extract(&dir2).map_err(|e| e.to_string())?;
+        }
         Ok(())
     })
     .await
     .map_err(|e| e.to_string())??;
 
+    // A build we downloaded ourselves usually isn't quarantined, but strip it defensively so
+    // macOS Gatekeeper never blocks the (ad-hoc-signed) game the first time it's launched.
+    #[cfg(target_os = "macos")]
+    {
+        let _ = Command::new("xattr")
+            .arg("-dr")
+            .arg("com.apple.quarantine")
+            .arg(&dir)
+            .status();
+    }
+
     fs::write(dir.join("version.txt"), version).map_err(|e| e.to_string())?;
     Ok(())
 }
 
-/// Launch a game by REUSING the launcher's own window — reconfigure it (bigger, decorated,
-/// resizable) and navigate it to that game's local server. We deliberately do NOT open a second
-/// WebviewWindow: on some Windows/WebView2 setups an additional window never paints. Each game is
-/// served over its own fixed localhost port (a stable origin, so saves persist), started lazily on
-/// first play and left running for the session.
+/// Play a game. A NATIVE game is spawned as its OWN process — it runs in its own window and this
+/// window stays the library. A WEB game reuses this window: we reconfigure it (bigger, decorated,
+/// resizable) and navigate it to that game's local server. (We deliberately never open a second
+/// WebviewWindow — on some Windows/WebView2 setups an extra window never paints.) Each web game is
+/// served over its own fixed localhost port (a stable origin, so saves persist), started lazily.
 #[tauri::command]
 fn play(app: tauri::AppHandle, slug: String, serving: State<Serving>) -> Result<(), String> {
     let game = game_by_slug(&slug).ok_or("unknown game")?;
     let dir = game_dir(&app, &slug)?;
+
+    // Native: launch the installed executable and leave this window on the library.
+    let port = match &game.delivery {
+        Delivery::Native { .. } => return launch_native(&dir),
+        Delivery::Web { port, .. } => *port,
+    };
+
+    // Web: serve the bundle and show it in this window.
     if !dir.join("index.html").exists() {
         return Err("that game isn't installed yet".into());
     }
     {
         let mut bound = serving.0.lock().map_err(|_| "server lock poisoned".to_string())?;
-        if !bound.contains(&game.port) {
+        if !bound.contains(&port) {
             let pads = pad_state(&serving);
-            serve(dir.clone(), game.port, pads, app.clone())?;
-            bound.insert(game.port);
+            serve(dir.clone(), port, pads, app.clone())?;
+            bound.insert(port);
         }
     }
-    let url: tauri::Url = format!("http://127.0.0.1:{}/", game.port)
+    let url: tauri::Url = format!("http://127.0.0.1:{}/", port)
         .parse()
         .map_err(|_| "bad game url".to_string())?;
     let win = app.get_webview_window("main").ok_or("no window")?;
@@ -278,6 +358,38 @@ fn play(app: tauri::AppHandle, slug: String, serving: State<Serving>) -> Result<
         let _ = win.set_fullscreen(true); // open the way the player last left it
     }
     Ok(())
+}
+
+/// Spawn a NATIVE game as its own detached process: macOS `open`s the .app bundle; Windows runs
+/// the .exe. The launcher does not wait on it — the game owns its own window and lifetime.
+fn launch_native(dir: &Path) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        let app = find_entry(dir, "app").ok_or("that game isn't installed yet")?;
+        Command::new("open").arg(&app).spawn().map_err(|e| e.to_string())?;
+        Ok(())
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let exe = find_entry(dir, "exe").ok_or("that game isn't installed yet")?;
+        Command::new(&exe).current_dir(dir).spawn().map_err(|e| e.to_string())?;
+        Ok(())
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let _ = dir;
+        Err("native games aren't supported on this platform".into())
+    }
+}
+
+/// The first entry in `dir` whose name ends in `.<ext>` — the installed `.app` bundle (macOS) or
+/// the game `.exe` (Windows).
+#[cfg(any(target_os = "macos", target_os = "windows"))]
+fn find_entry(dir: &Path, ext: &str) -> Option<PathBuf> {
+    let want = format!(".{ext}");
+    fs::read_dir(dir).ok()?.flatten().map(|e| e.path()).find(|p| {
+        p.file_name().and_then(|n| n.to_str()).map(|n| n.ends_with(&want)).unwrap_or(false)
+    })
 }
 
 // ---- Native controller bridge --------------------------------------------------------------------

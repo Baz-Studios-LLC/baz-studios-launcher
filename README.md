@@ -4,21 +4,27 @@ One hub that keeps every Baz Studios game — and itself — up to date, and run
 polished window with a card per game: install, update, and play, with each game's own art and
 brand colour.
 
-It's a generalization of the WriftHeart launcher: every Baz Studios game is a **pure-web bundle**
-(`index.html` + `js/`, all art baked into JS), so the launcher just *downloads and serves* each
-game's static files over a fixed localhost port and opens it in its own window. The games know
-nothing about the launcher — delete it and the downloaded files still run in any browser/webview.
+Each Baz Studios game ships in one of two forms, and the launcher handles both:
+
+- **Web bundle** — a pure-web game (`index.html` + `js/`, all art baked into JS). The launcher
+  *downloads and serves* its static files over a fixed localhost port and opens it in this window.
+  The game knows nothing about the launcher — the downloaded files still run in any browser/webview.
+- **Native build** — a real platform executable (e.g. the Rust + Bevy WriftHeart). The launcher
+  downloads the build for your OS, installs it, and *launches it as its own process* in its own
+  window; the launcher stays on the library.
 
 ## What it does
 
 1. On start, it self-updates (checks GitHub for a newer launcher; if found, downloads + verifies +
    swaps it in and relaunches — the last time you touch macOS Gatekeeper).
 2. For each game in the catalog, it asks that game's GitHub repo for the newest **published**
-   release carrying its `*-game.zip` asset, and compares it to the locally-installed copy.
-3. **Install / Update** downloads the bundle and unpacks it into the OS app-data dir.
-4. **Play** serves that folder over the game's fixed localhost port and opens it in this window —
-   a stable origin, so each game's `localStorage` saves persist across launches and updates. A
-   game's in-page "Exit" returns you to the library.
+   release carrying that game's asset (a web bundle, or the native build for your platform), and
+   compares it to the locally-installed copy.
+3. **Install / Update** downloads the asset and unpacks it into the OS app-data dir (de-quarantining
+   native macOS builds so Gatekeeper doesn't block them).
+4. **Play** runs the game — a web bundle is served over its fixed localhost port and shown in this
+   window (a stable `localStorage` origin, so saves persist); a native build is spawned as its own
+   process. A web game's in-page "Exit" returns you to the library.
 
 A game whose repo has no such published release (private, or no `*-game.zip` yet) simply shows
 **Coming soon** — the launcher degrades gracefully and never errors.
