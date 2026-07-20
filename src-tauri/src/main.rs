@@ -185,11 +185,40 @@ fn launcher_version(app: tauri::AppHandle) -> String {
 /// The version of a game's currently-installed copy (None if it isn't installed yet).
 #[tauri::command]
 fn installed_version(app: tauri::AppHandle, slug: String) -> Option<String> {
-    let vf = game_dir(&app, &slug).ok()?.join("version.txt");
-    fs::read_to_string(vf)
+    let game = game_by_slug(&slug)?;
+    let dir = game_dir(&app, &slug).ok()?;
+    // A version stamp alone isn't "installed" — the delivery's actual artifact must be present.
+    // This also HEALS a leftover install of a different delivery: e.g. the old web bundle for a
+    // game that has since gone native (no .app) reads as not-installed, so the UI offers Install
+    // (a fresh install wipes the stale folder) instead of a Play that can't find an executable.
+    let present = match &game.delivery {
+        Delivery::Web { .. } => dir.join("index.html").exists(),
+        Delivery::Native { .. } => native_artifact(&dir),
+    };
+    if !present {
+        return None;
+    }
+    fs::read_to_string(dir.join("version.txt"))
         .ok()
         .map(|s| s.trim().to_string())
         .filter(|s| !s.is_empty())
+}
+
+/// Is a native game's launchable artifact present in `dir` (the .app on macOS, an .exe on Windows)?
+fn native_artifact(dir: &Path) -> bool {
+    #[cfg(target_os = "macos")]
+    {
+        find_entry(dir, "app").is_some()
+    }
+    #[cfg(target_os = "windows")]
+    {
+        find_entry(dir, "exe").is_some()
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let _ = dir;
+        false
+    }
 }
 
 // Pull the download URL for a game's bundle asset out of a release's asset list, if present.
