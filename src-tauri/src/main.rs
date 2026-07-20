@@ -96,12 +96,17 @@ const GAMES: &[Game] = &[
         delivery: Delivery::Web { asset: "wingman-game.zip", port: 47824 },
     },
     Game {
-        slug: "neondrift",
-        name: "Neon Edge",
-        tagline: "Neon-soaked arcade action on the edge of the grid.",
-        repo: "Baz-Studios-LLC/Neon-Drift",
-        accent: "#ff3bd0",
-        delivery: Delivery::Web { asset: "neondrift-game.zip", port: 47825 },
+        slug: "violet-edge",
+        name: "VIOLET EDGE",
+        tagline: "A neon-vector Asteroids love letter — cut the field, hold the edge.",
+        repo: "Baz-Studios-LLC/Violet-Edge",
+        accent: "#8a5cff",
+        // Rust + Bevy native build per platform (same delivery as WriftHeart). Renamed from the old
+        // web "Neon Edge"/Neon-Drift entry — that was the retired JS build.
+        delivery: Delivery::Native {
+            mac: "violet-edge-macos-aarch64.app.tar.gz",
+            windows: "violet-edge-windows-x86_64.zip",
+        },
     },
     Game {
         slug: "crashout",
