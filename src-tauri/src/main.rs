@@ -37,7 +37,8 @@ enum Delivery {
 }
 
 impl Delivery {
-    /// The release-asset name to fetch for the platform we're running on.
+    /// The release-asset SUFFIX to fetch for the platform we're running on (see `bundle_url` — assets
+    /// are matched by suffix, so these can be stable tails like `-windows-x86_64.zip`).
     fn asset(&self) -> &'static str {
         match self {
             Delivery::Web { asset, .. } => asset,
@@ -81,10 +82,11 @@ const GAMES: &[Game] = &[
         tagline: "An 8-bit action-RPG of a shattered world. Gather the ten shards; mend the Wriftheart.",
         repo: "Baz-Studios-LLC/wriftheart",
         accent: "#b06cff",
-        // The Rust + Bevy rewrite ships as a native build per platform.
+        // The Rust + Bevy rewrite ships as a native build per platform. Asset SUFFIXES (matched by
+        // `bundle_url`'s ends_with) — the studio native convention, so versioned names still match.
         delivery: Delivery::Native {
-            mac: "WriftHeart-macos-aarch64.app.tar.gz",
-            windows: "WriftHeart-windows-x86_64.zip",
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
         },
     },
     Game {
@@ -102,10 +104,11 @@ const GAMES: &[Game] = &[
         repo: "Baz-Studios-LLC/Violet-Edge",
         accent: "#8a5cff",
         // Rust + Bevy native build per platform (same delivery as WriftHeart). Renamed from the old
-        // web "Neon Edge"/Neon-Drift entry — that was the retired JS build.
+        // web "Neon Edge"/Neon-Drift entry — that was the retired JS build. Asset SUFFIXES (ends_with),
+        // so the game can version its asset names without breaking this.
         delivery: Delivery::Native {
-            mac: "violet-edge-macos-aarch64.app.tar.gz",
-            windows: "violet-edge-windows-x86_64.zip",
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
         },
     },
     Game {
@@ -227,9 +230,13 @@ fn native_artifact(dir: &Path) -> bool {
 }
 
 // Pull the download URL for a game's bundle asset out of a release's asset list, if present.
+// Matches by SUFFIX, not exact name, so a game can version or rename its asset
+// (e.g. `violet-edge-v0.3.0-windows-x86_64.zip`) without breaking the launcher — the catalog stores a
+// stable tail like `-windows-x86_64.zip`. Within one repo's release there's only one asset per suffix.
 fn bundle_url(release: &serde_json::Value, asset: &str) -> Option<String> {
     release["assets"].as_array()?.iter().find_map(|a| {
-        if a["name"].as_str() == Some(asset) {
+        let name = a["name"].as_str()?;
+        if name.ends_with(asset) {
             a["browser_download_url"].as_str().map(|s| s.to_string())
         } else {
             None
