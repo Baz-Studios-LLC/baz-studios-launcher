@@ -123,6 +123,12 @@
   .btn.ghost{background:rgba(20,24,38,.6);color:var(--muted);border:1px solid var(--line-2);box-shadow:none}
   .btn.ghost:hover{color:var(--ink);border-color:rgba(var(--aRGB),.5);filter:none}
   .btn[disabled]{opacity:.45;cursor:default;pointer-events:none;filter:grayscale(.4)}
+  /* An update wears AMBER (the warn family the status dots already speak) so it
+     reads at a glance against the accent-coloured Play/Install (Baz). */
+  .btn.upd{color:#241505;background:linear-gradient(180deg,#ffbf6e,#f2a24a 58%,#dd8a3c);
+    box-shadow:0 8px 20px -8px rgba(242,162,74,.75),inset 0 1px 0 rgba(255,255,255,.5);animation:updglow 2.2s ease-in-out infinite}
+  @keyframes updglow{0%,100%{box-shadow:0 8px 20px -8px rgba(242,162,74,.7),inset 0 1px 0 rgba(255,255,255,.5)}
+    50%{box-shadow:0 8px 28px -6px rgba(242,162,74,1),inset 0 1px 0 rgba(255,255,255,.5)}}
   .btn .ic{margin-right:7px;font-size:11px}
 
   footer{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:10px 26px 16px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
@@ -280,7 +286,7 @@
     const mk = (label, cls, on, ic) => { const b=document.createElement("button"); b.className="btn"+cls; b.innerHTML=(ic?`<span class="ic">${ic}</span>`:"")+label; if(on)b.onclick=on; else b.disabled=true; return b; };
     bar.innerHTML = `<div class="prog" data-prog><div class="bar"></div></div><div class="err" data-err></div>`;
     if (s.loading){ /* just the spinner in chips */ }
-    else if (s.installed && s.latest && verNewer(s.latest, s.installed)){ bar.appendChild(mk("Update",btnLight,()=>doUpdate(),"↓")); } // becomes Play once the update lands
+    else if (s.installed && s.latest && verNewer(s.latest, s.installed)){ bar.appendChild(mk("Update"," upd",()=>doUpdate(),"↓")); } // amber: an update should read at a glance (becomes Play once it lands)
     else if (s.installed){ bar.appendChild(mk("Play",btnLight,()=>doPlay(),"▶")); }
     else if (s.latest){ bar.appendChild(mk("Install",btnLight,()=>doUpdate(),"↓")); } // becomes Play once installed
     else { bar.appendChild(mk("Coming Soon","",null)); }
