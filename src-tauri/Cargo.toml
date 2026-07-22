@@ -1,6 +1,6 @@
 [package]
 name = "baz-studios-launcher"
-version = "0.1.8"
+version = "0.1.9"
 description = "Baz Studios Launcher — keeps every Baz Studios game (and itself) updated, and runs them"
 edition = "2021"
 
