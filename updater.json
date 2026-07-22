@@ -1,27 +1,27 @@
 {
-  "version": "0.1.9",
+  "version": "0.1.10",
   "notes": "The Baz Studios Launcher — keeps every game (and itself) updated, and runs them.",
-  "pub_date": "2026-07-22T01:16:27.220Z",
+  "pub_date": "2026-07-22T16:53:09.033Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9rT0pZYjEzSC9maWVTRDFuNzVOakpJZ2hMV1N3NGMvSEllUndXL0Z1N3FpSllxL0VZd1RJMkdwSi9MZmFXM0JXMjZ4ay8xd1BEWFdOMm1wMVVJNWc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NjgyODA1CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpHYnQwT3QwcDlrczdCLy85UlZXbjM0TlBQWnN3cUlFS1c1dE1DWmpieUFEMlVoMWh6WG1zcmgxS0d2b1U1TE01d0E5VEF1TXFHTndTTkxGZU83dzZBQT09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.9/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWd6cHdibmtvbFhyWTNueHc5THI1RTBRTVFNL1JWYVBmQVV3WC9rVXpLQWJVRTh2WExod2JRMlp0TFUyL0EybGZYQ3JMSnNqVHBFalorWkpFc29mbGdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NzM5MDIwCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpOejU3Y1NNaG9VUzYrN1JtZUJvbTJ2ZlQvbnFqLzR2QTNJaEFjZnFaZkJ6YXg4U01HdDNXdHdQYVRyUUhXdWlESlJsMGlqMkVEZVN6VGxkVlo1NTFDQT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.10/Baz.Studios_aarch64.app.tar.gz"
     },
     "darwin-aarch64-app": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9rT0pZYjEzSC9maWVTRDFuNzVOakpJZ2hMV1N3NGMvSEllUndXL0Z1N3FpSllxL0VZd1RJMkdwSi9MZmFXM0JXMjZ4ay8xd1BEWFdOMm1wMVVJNWc4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NjgyODA1CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpHYnQwT3QwcDlrczdCLy85UlZXbjM0TlBQWnN3cUlFS1c1dE1DWmpieUFEMlVoMWh6WG1zcmgxS0d2b1U1TE01d0E5VEF1TXFHTndTTkxGZU83dzZBQT09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.9/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWd6cHdibmtvbFhyWTNueHc5THI1RTBRTVFNL1JWYVBmQVV3WC9rVXpLQWJVRTh2WExod2JRMlp0TFUyL0EybGZYQ3JMSnNqVHBFalorWkpFc29mbGdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NzM5MDIwCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpOejU3Y1NNaG9VUzYrN1JtZUJvbTJ2ZlQvbnFqLzR2QTNJaEFjZnFaZkJ6YXg4U01HdDNXdHdQYVRyUUhXdWlESlJsMGlqMkVEZVN6VGxkVlo1NTFDQT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.10/Baz.Studios_aarch64.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW81VVo0ZVNEeTNoM1J0aXR4U3pVRTFSb3RHNGtXckdEcEFGbVJmVUl4QnhraHA0Z3ZSTkQ5ZW9JYmN1NS9jSVhrNjJ5dUI0VlJ4WHZibktOWlVIU3dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NjgyOTgzCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjlfeDY0X2VuLVVTLm1zaQo5aUhuVUJnblVpbTI2Rk0yU3ZvSmtWT2M2d0xUT2V0RDBacWUwSDlReUE0U2U2Y3RxY1Jnblk3alVhNXhKU2hWTDBvR2tKem1SbW9rZyttcnViQzZCZz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.9/Baz.Studios_0.1.9_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9CUDBJY1JMMzd1RW55Q0Zrem9JTnFyR3dPbUlkVzJFQ3FFZDB6UmY3Mk1FcUgxR0NlVWF0U1ZUVldJRExzd095dHg0RGJScnB3ZDNYdGMxSnl6WEE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NzM5MTg1CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjEwX3g2NF9lbi1VUy5tc2kKU0FBbUdyU1BkMjYxRVU1eWMyRVpPL041aTJJK3g5ZEFSY1Zmd3Zna0lBUmR5MUN1RjI3STUzNWNqNXJtd0ZPL3JRbnNYMzlFenZycThDZVJwcUVtQVE9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.10/Baz.Studios_0.1.10_x64_en-US.msi"
     },
     "windows-x86_64-msi": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW81VVo0ZVNEeTNoM1J0aXR4U3pVRTFSb3RHNGtXckdEcEFGbVJmVUl4QnhraHA0Z3ZSTkQ5ZW9JYmN1NS9jSVhrNjJ5dUI0VlJ4WHZibktOWlVIU3dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NjgyOTgzCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjlfeDY0X2VuLVVTLm1zaQo5aUhuVUJnblVpbTI2Rk0yU3ZvSmtWT2M2d0xUT2V0RDBacWUwSDlReUE0U2U2Y3RxY1Jnblk3alVhNXhKU2hWTDBvR2tKem1SbW9rZyttcnViQzZCZz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.9/Baz.Studios_0.1.9_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9CUDBJY1JMMzd1RW55Q0Zrem9JTnFyR3dPbUlkVzJFQ3FFZDB6UmY3Mk1FcUgxR0NlVWF0U1ZUVldJRExzd095dHg0RGJScnB3ZDNYdGMxSnl6WEE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NzM5MTg1CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjEwX3g2NF9lbi1VUy5tc2kKU0FBbUdyU1BkMjYxRVU1eWMyRVpPL041aTJJK3g5ZEFSY1Zmd3Zna0lBUmR5MUN1RjI3STUzNWNqNXJtd0ZPL3JRbnNYMzlFenZycThDZVJwcUVtQVE9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.10/Baz.Studios_0.1.10_x64_en-US.msi"
     },
     "windows-x86_64-nsis": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9EYUZaaFpSTFFuYStqZmhrVHJUOEdDaTg0RklDcWc4SStIOEY0NU1zditkdjBXbHlManBIUkN1VlZKRXpPdHIrb0o3QVZJaG1MeE5ZVlFZUzgyWXdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NjgyOTgzCWZpbGU6QmF6IFN0dWRpb3NfMC4xLjlfeDY0LXNldHVwLmV4ZQpsNmZLUkExRVBjRUdNVUN1TUhwd1dSbTFuOURFbGxyUUZTUmYveU1CMUZKU1JXYkhvS2d2dHRrTHdkNDEwUEQ4d3lGK2JocHVEWDlEeC81RThKTUREZz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.9/Baz.Studios_0.1.9_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXBhY25QekdzY3J4YkxHQnRhL1VRYmNuNmV0aVRSbmhvZUExVHRPWVRqUStDMTRTMmRxYzk0RjUyaGRpMUZ0c1JMaGNiakhZY3M5c29YQVEvWER3dUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0NzM5MTg1CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjEwX3g2NC1zZXR1cC5leGUKbWpJN0p1RDl0c2k4K0puUlRVQmJoamNxVXlmQlhnS2pRWjJvKzlFOG4vZ01WbkJoN2RPV0J1alBBdGJOY0RQVjZTT3dvZWZDUndWUDV4MHkvNmFwQ3c9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.10/Baz.Studios_0.1.10_x64-setup.exe"
     }
   }
 }
