@@ -298,26 +298,7 @@
 
   // ---- patch-notes markdown ----
   const mdInline=(s)=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
-  // The release body leads with a fixed "installable / Direct builds" block (manual-download steps) that's
-  // redundant inside the launcher — it already auto-installs and updates. STRIP it entirely so What's New
-  // shows ONLY the game's changelog. Keyed off the lead-in line ("installable" / "Direct builds" / "Direct
-  // downloads") plus the contiguous platform bullets (and any blank lines) right after it; if there's no
-  // such block the notes render unchanged. Applies to every game's notes, past and future — no per-release
-  // effort. (If a release body is ONLY the install block, the notes fall back to the empty state.)
-  function stripInstallBlock(md){
-    const lead=/\b(installable|direct builds?|direct downloads?)\b/i, bullet=/^\s*[-*]\s+/;
-    const lines=md.split("\n");
-    const i=lines.findIndex(l=>lead.test(l));
-    if(i<0) return md;                                                            // no install block → leave it alone
-    let e=i; while(e+1<lines.length && (!lines[e+1].trim() || bullet.test(lines[e+1]))) e++; // absorb its bullets + blanks
-    let rest=lines.slice(0,i).concat(lines.slice(e+1))                            // drop the block…
-      .filter((l,idx,a)=>l.trim()||(idx>0&&a[idx-1].trim()));                     // …and collapse blank runs at the seam
-    while(rest.length && !rest[rest.length-1].trim()) rest.pop();
-    while(rest.length && !rest[0].trim()) rest.shift();
-    return rest.join("\n");
-  }
   function renderNotes(md){
-    md=stripInstallBlock(md);
     const out=[]; let cur=null; const flush=()=>{if(cur){out.push('<div class="'+cur.cls+'">'+mdInline(cur.text)+'</div>');cur=null;}};
     for (const raw of md.split("\n")){ const line=raw.replace(/\s+$/,""); let m;
       if(!line){flush();out.push('<div class="nsp"></div>');}
