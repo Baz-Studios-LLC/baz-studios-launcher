@@ -112,6 +112,18 @@ const GAMES: &[Game] = &[
         },
     },
     Game {
+        slug: "egregore",
+        name: "Egregore",
+        tagline: "A god game where the villagers' belief defines the god.",
+        repo: "Baz-Studios-LLC/egregore",
+        accent: "#d4a24e",
+        // Rust + Bevy native build per platform, same delivery as WriftHeart.
+        delivery: Delivery::Native {
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
+        },
+    },
+    Game {
         slug: "crashout",
         name: "Crashout",
         tagline: "An isometric office-survival game — hold it together before you crash out.",
