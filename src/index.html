@@ -79,6 +79,7 @@
   .hero::after{content:"";position:absolute;inset:0;box-shadow:inset 0 -44px 44px -32px rgba(6,7,13,.95)}
   .hero img{max-width:70%;max-height:132px;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(var(--aRGB),.6))}
   .hero.wordmark img{max-height:150px} /* the WriftHeart crown needs headroom — 74px suited skinny text marks */
+  .hero.g-divus-factus img{max-width:94%;max-height:180px} /* the Divus Factus word art is painted small in its canvas; let it fill the hero */
   .hero .htext{font-size:44px;font-weight:800;letter-spacing:.02em;color:#fff;text-shadow:0 6px 30px rgba(var(--aRGB),.75)}
 
   .dhead{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin:16px 2px 4px}
@@ -272,7 +273,9 @@
     // hero art (fall back to the wordmark text already in place)
     const hero = d.querySelector("[data-hero]");
     const img = new Image(); img.alt = g.info.name;
-    img.onload = () => { hero.classList.add(img.naturalWidth/img.naturalHeight >= 2 ? "wordmark":"mark"); hero.innerHTML=""; hero.appendChild(img); };
+    // The slug rides along as a class, so one game's art can be sized on
+    // its own terms without every other hero moving with it.
+    img.onload = () => { hero.classList.add(img.naturalWidth/img.naturalHeight >= 2 ? "wordmark":"mark", "g-"+selected); hero.innerHTML=""; hero.appendChild(img); };
     img.src = `assets/${selected}.png`;
 
     // notes
