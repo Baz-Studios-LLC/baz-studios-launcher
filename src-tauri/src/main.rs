@@ -75,8 +75,13 @@ fn native_pick(mac: &'static str, windows: &'static str) -> &'static str {
 /// lands OUTSIDE that folder, beside the game's own saves, and is fetched only
 /// when it is missing.
 struct Payload {
-    /// The release-asset SUFFIX to fetch, matched the same way bundles are.
-    asset: &'static str,
+    /// The release TAG the payload lives on — a fixed, standalone release,
+    /// separate from the game's versioned ones, so a gigabyte of weights is
+    /// uploaded once rather than attached to every build. `check_latest`
+    /// never sees it because it carries no game bundle.
+    tag: &'static str,
+    /// The release-asset SUFFIXES to fetch, matched the same way bundles are.
+    assets: &'static [&'static str],
     /// The game's support-directory name. Must match what the game itself
     /// computes for its saves, because that is how the game finds this file:
     /// no handshake, no environment variable, one shared convention. (macOS
@@ -153,7 +158,16 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
-        payload: None,
+        // The villagers' own words: a language model the game loads from
+        // beside its saves. The weights and their tokenizer live on the
+        // fixed `models-1` release; the game runs fine without them, it
+        // just keeps to its written lines.
+        payload: Some(Payload {
+            tag: "models-1",
+            assets: &[".gguf", "-tokenizer.json"],
+            support_dir: "Divus Factus",
+            into: "models",
+        }),
     },
     Game {
         slug: "crashout",
@@ -365,41 +379,73 @@ fn support_path(support_dir: &str, into: &str) -> Option<PathBuf> {
 /// should be — which is every install after the first. A partial or truncated
 /// download (a closed lid mid-fetch) fails the size check and is fetched again
 /// rather than left to be loaded as a corrupt model.
-async fn fetch_payload(game: &Game, release: &serde_json::Value) -> Result<(), String> {
+async fn fetch_payload(game: &Game) -> Result<(), String> {
     let Some(payload) = &game.payload else {
         return Ok(());
     };
-    let Some((url, name, size)) = payload_asset(release, payload.asset) else {
-        // The release does not carry one. Not an error: the game is built to
-        // run without it.
-        return Ok(());
-    };
-    let Some(dir) = support_path(payload.support_dir, payload.into) else {
-        return Err("could not find the game's support directory".into());
-    };
-    let dest = dir.join(&name);
-    if let Ok(meta) = fs::metadata(&dest) {
-        if size == 0 || meta.len() == size {
-            return Ok(());
-        }
-    }
-
-    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let client = reqwest::Client::builder()
         .user_agent(UA)
         .build()
         .map_err(|e| e.to_string())?;
-    let resp = client.get(&url).send().await.map_err(|e| e.to_string())?;
+    let api = format!(
+        "https://api.github.com/repos/{}/releases/tags/{}",
+        game.repo, payload.tag
+    );
+    let resp = client
+        .get(&api)
+        .header("Accept", "application/vnd.github+json")
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
     if !resp.status().is_success() {
-        return Err(format!("payload download returned {}", resp.status()));
+        // No payload release published yet. Not an error: the game is built
+        // to run without it.
+        eprintln!("no payload release {} for {}", payload.tag, game.slug);
+        return Ok(());
     }
-    let bytes = resp.bytes().await.map_err(|e| e.to_string())?;
-    // Written beside the target and renamed, so an interrupted fetch can never
-    // leave a half-file sitting where a whole one belongs.
-    let part = dir.join(format!("{name}.part"));
-    fs::write(&part, &bytes).map_err(|e| e.to_string())?;
-    fs::rename(&part, &dest).map_err(|e| e.to_string())?;
-    eprintln!("fetched {} ({} bytes)", dest.display(), bytes.len());
+    let release: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
+
+    let Some(dir) = support_path(payload.support_dir, payload.into) else {
+        return Err("could not find the game's support directory".into());
+    };
+    for suffix in payload.assets {
+        let Some((url, name, size)) = payload_asset(&release, suffix) else {
+            eprintln!("payload release carries nothing ending {suffix}");
+            continue;
+        };
+        let dest = dir.join(&name);
+        if let Ok(meta) = fs::metadata(&dest) {
+            if size == 0 || meta.len() == size {
+                continue;
+            }
+        }
+        fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+        let mut resp = client.get(&url).send().await.map_err(|e| e.to_string())?;
+        if !resp.status().is_success() {
+            return Err(format!("payload download returned {}", resp.status()));
+        }
+        // Streamed to disk a chunk at a time: a model is a gigabyte, and a
+        // gigabyte does not belong in a tester's RAM on the way through.
+        // Written beside the target and renamed, so an interrupted fetch can
+        // never leave a half-file sitting where a whole one belongs.
+        let part = dir.join(format!("{name}.part"));
+        let mut file = fs::File::create(&part).map_err(|e| e.to_string())?;
+        let mut written: u64 = 0;
+        while let Some(chunk) = resp.chunk().await.map_err(|e| e.to_string())? {
+            use std::io::Write;
+            file.write_all(&chunk).map_err(|e| e.to_string())?;
+            written += chunk.len() as u64;
+        }
+        drop(file);
+        if size != 0 && written != size {
+            let _ = fs::remove_file(&part);
+            return Err(format!(
+                "payload {name} arrived {written} bytes of {size}"
+            ));
+        }
+        fs::rename(&part, &dest).map_err(|e| e.to_string())?;
+        eprintln!("fetched {} ({written} bytes)", dest.display());
+    }
     Ok(())
 }
 
@@ -483,11 +529,10 @@ async fn install(
     // after the first, which is the whole point of keeping it out here.
     if let Some(game) = game_by_slug(&slug) {
         if game.payload.is_some() {
-            match latest_release(game).await {
-                Ok(release) => fetch_payload(game, &release).await?,
-                // No reachable release listing is not a reason to refuse an
-                // install: the bundle URL we were handed still works.
-                Err(e) => eprintln!("could not check for a payload: {e}"),
+            // A missing or unreachable payload is not a reason to refuse an
+            // install: the game is built to run without it.
+            if let Err(e) = fetch_payload(game).await {
+                eprintln!("could not fetch the payload: {e}");
             }
         }
     }
