@@ -1,27 +1,27 @@
 {
-  "version": "0.1.18",
+  "version": "0.1.19",
   "notes": "The Baz Studios Launcher — keeps every game (and itself) updated, and runs them.",
-  "pub_date": "2026-07-31T21:12:40.150Z",
+  "pub_date": "2026-07-31T21:35:32.831Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWdkZ1U0ZEluODQvOFdXM3lTLzUveklsNGE4UlNQWnJDNGROSUd3RWtSYTByNTVsQjBMZWdtZXBJbTVxOWpiYThIMHlWL0dXbUtPbStZdXZzaGtsWFFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMyMjc2CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpCZDBoK2hTd2tHNVlDOFRkbkZadndDaFE0dnBWc0RxV0xoTHFMZWs2Vm8ybSsxMWVyVytlcHgxenBzQUJJN2tINlh2Z1pxeHl4eUg4NnJXcDJRbUpEZz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.18/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWxBc3JRMENwZVJtT04ybjV4T1JvYnlVZjZWaGJLNTE0SzAxM0RDNzdnQnhWZll6clhlaGI5ckFxRVhZVm14SHpTN3ZYREJFMHlKK3ZtazRLajUxL2d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMzNjUwCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpocnlxUXFsbGhwS2dYbjBWdXR4MXFmckorb1BVeVpOOFJhcnEwRnV2YW9NVVphNlBkZGJzQ2gvU0VwaUh3RTZCR0s3UU5vR1puUVY3Ym5rK0xCYXBEQT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.19/Baz.Studios_aarch64.app.tar.gz"
     },
     "darwin-aarch64-app": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWdkZ1U0ZEluODQvOFdXM3lTLzUveklsNGE4UlNQWnJDNGROSUd3RWtSYTByNTVsQjBMZWdtZXBJbTVxOWpiYThIMHlWL0dXbUtPbStZdXZzaGtsWFFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMyMjc2CWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpCZDBoK2hTd2tHNVlDOFRkbkZadndDaFE0dnBWc0RxV0xoTHFMZWs2Vm8ybSsxMWVyVytlcHgxenBzQUJJN2tINlh2Z1pxeHl4eUg4NnJXcDJRbUpEZz09Cg==",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.18/Baz.Studios_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWxBc3JRMENwZVJtT04ybjV4T1JvYnlVZjZWaGJLNTE0SzAxM0RDNzdnQnhWZll6clhlaGI5ckFxRVhZVm14SHpTN3ZYREJFMHlKK3ZtazRLajUxL2d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMzNjUwCWZpbGU6QmF6IFN0dWRpb3MuYXBwLnRhci5negpocnlxUXFsbGhwS2dYbjBWdXR4MXFmckorb1BVeVpOOFJhcnEwRnV2YW9NVVphNlBkZGJzQ2gvU0VwaUh3RTZCR0s3UU5vR1puUVY3Ym5rK0xCYXBEQT09Cg==",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.19/Baz.Studios_aarch64.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXZJY3g3OEVQZGxiVWlaUk1FV3JoUjRLNmNXM2JxcUFRT1hpbnBjOWJyejhtejN0SG9TR2hjdzJCUElqdnJ1UVJXVThKc2tnNSsxVEZYdm1qZHk5ZXdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMyMzU3CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE4X3g2NF9lbi1VUy5tc2kKYVpwQ2FwemVXWE5pMkVzR0tndkJJOHVXQzlkSllQSHVoaG9EYnZ4dS9aZkpFT3hOdXFiRkkvRTFXUE9tR1pYQlBRMElsdWRTNUtLZ0Z4MGg0SmpWQ0E9PQo=",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.18/Baz.Studios_0.1.18_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWkrVW0xVEgveDRhUTNZbWpJcDBwaUNJZ25xMlZFRzUwNmgzc09QOE5NVVpzcUtMUE53WU1pdGlFM3M5TzQyY1ZyRmZNak9RdnFlcVJraURmMEhaT3cwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMzNzI5CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE5X3g2NF9lbi1VUy5tc2kKMnYyWmRNRXdZcXpXeE1QcmJvK2VQTFhYUXVuN01HRnhyeVhtQnB2c2FMYjhXR1RPR2hzVWYxN0U5eVNtVWNGY1Z5ZW5MQkc4NE9OSFJWelIxZHg3Q2c9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.19/Baz.Studios_0.1.19_x64_en-US.msi"
     },
     "windows-x86_64-msi": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYXZJY3g3OEVQZGxiVWlaUk1FV3JoUjRLNmNXM2JxcUFRT1hpbnBjOWJyejhtejN0SG9TR2hjdzJCUElqdnJ1UVJXVThKc2tnNSsxVEZYdm1qZHk5ZXdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMyMzU3CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE4X3g2NF9lbi1VUy5tc2kKYVpwQ2FwemVXWE5pMkVzR0tndkJJOHVXQzlkSllQSHVoaG9EYnZ4dS9aZkpFT3hOdXFiRkkvRTFXUE9tR1pYQlBRMElsdWRTNUtLZ0Z4MGg0SmpWQ0E9PQo=",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.18/Baz.Studios_0.1.18_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWkrVW0xVEgveDRhUTNZbWpJcDBwaUNJZ25xMlZFRzUwNmgzc09QOE5NVVpzcUtMUE53WU1pdGlFM3M5TzQyY1ZyRmZNak9RdnFlcVJraURmMEhaT3cwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMzNzI5CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE5X3g2NF9lbi1VUy5tc2kKMnYyWmRNRXdZcXpXeE1QcmJvK2VQTFhYUXVuN01HRnhyeVhtQnB2c2FMYjhXR1RPR2hzVWYxN0U5eVNtVWNGY1Z5ZW5MQkc4NE9OSFJWelIxZHg3Q2c9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.19/Baz.Studios_0.1.19_x64_en-US.msi"
     },
     "windows-x86_64-nsis": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYWliVEhibjZCRm9PTHhGYTNMZDRDU3RQQ3k5MTk3MkJya1AwQmI4RXNFZ1V6L3BHcmd0Q3VlamljcVBUOUZRRUhZb2VqQmNKeG5HM0xMbjgzNXNncndRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMyMzU3CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE4X3g2NC1zZXR1cC5leGUKMGIzM09Uenp2SSsrN2NKalAxQWdHem5CaG1tUUVRMGdsWjV5a3lVOFZJKzZCTDluQ3YvMHpZSWp3YXFaUGRUTG90NURMd1pQREtReVkvVlppMnBOQnc9PQo=",
-      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.18/Baz.Studios_0.1.18_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcXkvcGU3cU9WYW9yYW1Pam13LzZuNTJHT0xvNTVzcmhJRVQvQmYvTE1DZ09aWW5kcmhkdlZjbDZ4MFhoU3MyaFNlbS9hWEoycVAra1VIWVdtSk9QYnhOb2lxRXNDZFFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg1NTMzNzI5CWZpbGU6QmF6IFN0dWRpb3NfMC4xLjE5X3g2NC1zZXR1cC5leGUKUWZaVW5YWm5wL2hTUmJLT2MxbzRWSzRlU0JtT0F3NDIyZUNTZWVXNkxrSWUyQ0ViSUJnRzNrb0c4K25CWjYwTDdybFh1WkViaHVSYUIzZmhNNFFLRGc9PQo=",
+      "url": "https://github.com/Baz-Studios-LLC/baz-studios-launcher/releases/download/v0.1.19/Baz.Studios_0.1.19_x64-setup.exe"
     }
   }
 }
