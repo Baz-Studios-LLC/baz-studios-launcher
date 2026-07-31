@@ -112,9 +112,13 @@ const GAMES: &[Game] = &[
         },
     },
     Game {
-        slug: "egregore",
-        name: "Egregore",
+        slug: "divus-factus",
+        name: "Divus Factus",
         tagline: "A god game where the villagers' belief defines the god.",
+        // Renamed from Egregore (a 2024 Steam game took the name). The GitHub
+        // repo still carries the old name; GitHub's API redirects a renamed
+        // repo, so this keeps working whichever it ends up being — but the
+        // slug changed, which retires the old install folder below.
         repo: "Baz-Studios-LLC/egregore",
         accent: "#d4a24e",
         // Rust + Bevy native build per platform, same delivery as WriftHeart.
@@ -168,6 +172,40 @@ fn games() -> Vec<GameInfo> {
             accent: g.accent.to_string(),
         })
         .collect()
+}
+
+/// Install folders left behind by games that have since been renamed.
+///
+/// A game is keyed by its slug and a slug IS its folder name, so renaming one
+/// orphans gigabytes in the old folder with nothing left to launch it. Listed
+/// by hand rather than swept generically: deleting every folder we do not
+/// recognise is how a launcher eats something it should not have.
+const RETIRED_SLUGS: &[&str] = &[
+    // Egregore became Divus Factus.
+    "egregore",
+];
+
+/// Deletes retired install folders. Runs once, at startup, and is silent when
+/// there is nothing to clear — which is every launch after the first.
+fn sweep_retired(app: &tauri::AppHandle) {
+    let Ok(base) = app.path().app_data_dir() else {
+        return;
+    };
+    let games = base.join("games");
+    for slug in RETIRED_SLUGS {
+        // Never touch a folder a live game still answers to.
+        if GAMES.iter().any(|game| game.slug == *slug) {
+            continue;
+        }
+        let dir = games.join(slug);
+        if !dir.exists() {
+            continue;
+        }
+        match fs::remove_dir_all(&dir) {
+            Ok(()) => eprintln!("cleared the retired install at {}", dir.display()),
+            Err(e) => eprintln!("could not clear {}: {e}", dir.display()),
+        }
+    }
 }
 
 // Where a game lives: <app_data_dir>/games/<slug>
@@ -627,6 +665,12 @@ fn main() {
                 .build(),
         )
         .manage(Serving(Mutex::new(HashSet::new()), Mutex::new(None)))
+        .setup(|app| {
+            // A renamed game leaves its old install behind; clear it before
+            // the library is drawn, so a tester never sees two of one game.
+            sweep_retired(app.handle());
+            Ok(())
+        })
         .on_window_event(|window, event| match event {
             WindowEvent::CloseRequested { .. } => window.app_handle().exit(0),
             WindowEvent::Focused(focused) => {
