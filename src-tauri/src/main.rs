@@ -66,6 +66,27 @@ fn native_pick(mac: &'static str, windows: &'static str) -> &'static str {
     }
 }
 
+/// A large file a game needs that must NOT come down again with every update.
+///
+/// The case this exists for is a bundled language model: hundreds of megabytes
+/// that change maybe never, sitting next to a game bundle that changes daily.
+/// Putting it inside the game archive would mean re-downloading all of it for
+/// every build, and `install` wipes the game folder anyway — so a payload
+/// lands OUTSIDE that folder, beside the game's own saves, and is fetched only
+/// when it is missing.
+struct Payload {
+    /// The release-asset SUFFIX to fetch, matched the same way bundles are.
+    asset: &'static str,
+    /// The game's support-directory name. Must match what the game itself
+    /// computes for its saves, because that is how the game finds this file:
+    /// no handshake, no environment variable, one shared convention. (macOS
+    /// `open` does not pass environment through to a bundle, so a handshake
+    /// was never really on the table.)
+    support_dir: &'static str,
+    /// The subfolder within it.
+    into: &'static str,
+}
+
 struct Game {
     slug: &'static str,        // stable id (folder name, UI key)
     name: &'static str,        // display name
@@ -73,6 +94,9 @@ struct Game {
     repo: &'static str,        // owner/name on GitHub (must be public)
     accent: &'static str,      // brand colour (hex) — drives the card's gradient / glow in the UI
     delivery: Delivery,        // web bundle vs native build
+    /// A big companion file kept out of the update cycle. `None` for almost
+    /// every game.
+    payload: Option<Payload>,
 }
 
 const GAMES: &[Game] = &[
@@ -88,6 +112,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        payload: None,
     },
     Game {
         slug: "wingman",
@@ -96,6 +121,7 @@ const GAMES: &[Game] = &[
         repo: "Baz-Studios-LLC/Wingman",
         accent: "#3a86ff",
         delivery: Delivery::Web { asset: "wingman-game.zip", port: 47824 },
+        payload: None,
     },
     Game {
         slug: "violet-edge",
@@ -110,6 +136,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        payload: None,
     },
     Game {
         slug: "divus-factus",
@@ -126,6 +153,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        payload: None,
     },
     Game {
         slug: "crashout",
@@ -134,6 +162,7 @@ const GAMES: &[Game] = &[
         repo: "Baz-Studios-LLC/Crashout",
         accent: "#ff5a34",
         delivery: Delivery::Web { asset: "crashout-game.zip", port: 47826 },
+        payload: None,
     },
 ];
 
@@ -294,12 +323,121 @@ fn bundle_url(release: &serde_json::Value, asset: &str) -> Option<String> {
     })
 }
 
+/// Where a game keeps its own files — saves, and any payload we fetch for it.
+///
+/// This MIRRORS what the game computes for itself. It is duplicated rather than
+/// negotiated because macOS `open` hands a bundle to LaunchServices and drops
+/// the environment on the way, so there is no clean channel to tell a game
+/// where we put something. One shared convention instead, and if a game ever
+/// changes its support directory this must change with it.
+fn support_path(support_dir: &str, into: &str) -> Option<PathBuf> {
+    #[cfg(target_os = "macos")]
+    {
+        let home = std::env::var("HOME").ok()?;
+        Some(
+            PathBuf::from(home)
+                .join("Library/Application Support")
+                .join(support_dir)
+                .join(into),
+        )
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let appdata = std::env::var("APPDATA").ok()?;
+        Some(PathBuf::from(appdata).join(support_dir).join(into))
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let home = std::env::var("HOME").ok()?;
+        // Matches the game's XDG-ish fallback: lower-cased, hyphenated.
+        Some(
+            PathBuf::from(home)
+                .join(".local/share")
+                .join(support_dir.to_lowercase().replace(' ', "-"))
+                .join(into),
+        )
+    }
+}
+
+/// Fetches a game's payload, if it declares one and does not already have it.
+///
+/// Skipped whenever the file is already there at the size the release says it
+/// should be — which is every install after the first. A partial or truncated
+/// download (a closed lid mid-fetch) fails the size check and is fetched again
+/// rather than left to be loaded as a corrupt model.
+async fn fetch_payload(game: &Game, release: &serde_json::Value) -> Result<(), String> {
+    let Some(payload) = &game.payload else {
+        return Ok(());
+    };
+    let Some((url, name, size)) = payload_asset(release, payload.asset) else {
+        // The release does not carry one. Not an error: the game is built to
+        // run without it.
+        return Ok(());
+    };
+    let Some(dir) = support_path(payload.support_dir, payload.into) else {
+        return Err("could not find the game's support directory".into());
+    };
+    let dest = dir.join(&name);
+    if let Ok(meta) = fs::metadata(&dest) {
+        if size == 0 || meta.len() == size {
+            return Ok(());
+        }
+    }
+
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let client = reqwest::Client::builder()
+        .user_agent(UA)
+        .build()
+        .map_err(|e| e.to_string())?;
+    let resp = client.get(&url).send().await.map_err(|e| e.to_string())?;
+    if !resp.status().is_success() {
+        return Err(format!("payload download returned {}", resp.status()));
+    }
+    let bytes = resp.bytes().await.map_err(|e| e.to_string())?;
+    // Written beside the target and renamed, so an interrupted fetch can never
+    // leave a half-file sitting where a whole one belongs.
+    let part = dir.join(format!("{name}.part"));
+    fs::write(&part, &bytes).map_err(|e| e.to_string())?;
+    fs::rename(&part, &dest).map_err(|e| e.to_string())?;
+    eprintln!("fetched {} ({} bytes)", dest.display(), bytes.len());
+    Ok(())
+}
+
+/// A payload asset's URL, filename and expected size, matched by suffix.
+fn payload_asset(release: &serde_json::Value, asset: &str) -> Option<(String, String, u64)> {
+    release["assets"].as_array()?.iter().find_map(|a| {
+        let name = a["name"].as_str()?;
+        if !name.ends_with(asset) {
+            return None;
+        }
+        let url = a["browser_download_url"].as_str()?.to_string();
+        let size = a["size"].as_u64().unwrap_or(0);
+        Some((url, name.to_string(), size))
+    })
+}
+
 /// Find a game's newest release: scan its repo's release list (newest first) and take the first
 /// published (non-draft, non-prerelease) release that actually carries its game bundle. Skips the
 /// installer-only / launcher releases, so they never masquerade as "latest game".
 #[tauri::command]
 async fn check_latest(slug: String) -> Result<Latest, String> {
     let game = game_by_slug(&slug).ok_or("unknown game")?;
+    let rel = latest_release(game).await?;
+    let version = rel["tag_name"]
+        .as_str()
+        .unwrap_or("")
+        .trim_start_matches('v')
+        .to_string();
+    let url = bundle_url(&rel, game.delivery.asset()).ok_or("no published game release found")?;
+    let notes = rel["body"].as_str().unwrap_or("").to_string();
+    Ok(Latest { version, url, notes })
+}
+
+/// The newest published release that actually carries this game's bundle.
+///
+/// Shared by the version check and by the payload fetch, so both are looking at
+/// the same release rather than two separate answers to the same question.
+async fn latest_release(game: &Game) -> Result<serde_json::Value, String> {
     let client = reqwest::Client::builder()
         .user_agent(UA)
         .build()
@@ -320,17 +458,11 @@ async fn check_latest(slug: String) -> Result<Latest, String> {
         if rel["draft"].as_bool() == Some(true) || rel["prerelease"].as_bool() == Some(true) {
             continue;
         }
-        if let Some(url) = bundle_url(rel, game.delivery.asset()) {
-            let version = rel["tag_name"]
-                .as_str()
-                .unwrap_or("")
-                .trim_start_matches('v')
-                .to_string();
-            if version.is_empty() {
+        if bundle_url(rel, game.delivery.asset()).is_some() {
+            if rel["tag_name"].as_str().unwrap_or("").is_empty() {
                 continue;
             }
-            let notes = rel["body"].as_str().unwrap_or("").to_string();
-            return Ok(Latest { version, url, notes });
+            return Ok(rel.clone());
         }
     }
     Err("no published game release found".into())
@@ -345,6 +477,20 @@ async fn install(
     version: String,
 ) -> Result<(), String> {
     let dir = game_dir(&app, &slug)?;
+    // A declared payload is fetched FIRST, and only if missing. Before the
+    // bundle rather than after, so a game is never briefly installed without
+    // the companion file it expects — and skipped outright on every update
+    // after the first, which is the whole point of keeping it out here.
+    if let Some(game) = game_by_slug(&slug) {
+        if game.payload.is_some() {
+            match latest_release(game).await {
+                Ok(release) => fetch_payload(game, &release).await?,
+                // No reachable release listing is not a reason to refuse an
+                // install: the bundle URL we were handed still works.
+                Err(e) => eprintln!("could not check for a payload: {e}"),
+            }
+        }
+    }
     let client = reqwest::Client::builder()
         .user_agent(UA)
         .build()
