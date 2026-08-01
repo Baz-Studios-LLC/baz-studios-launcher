@@ -164,7 +164,9 @@ const GAMES: &[Game] = &[
         // just keeps to its written lines.
         payload: Some(Payload {
             tag: "models-1",
-            assets: &[".gguf", "-tokenizer.json"],
+            // Just the weights: the tokenizer lives inside the GGUF since
+            // the game moved to llama.cpp.
+            assets: &[".gguf"],
             support_dir: "Divus Factus",
             into: "models",
         }),
