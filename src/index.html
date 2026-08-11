@@ -280,7 +280,7 @@
     // notes
     const notes = d.querySelector("[data-notes]");
     if (s.loading) notes.innerHTML = `<div class="empty">Loading…</div>`;
-    else if (!s.latest && !s.installed) notes.innerHTML = `<div class="empty">This game isn't available yet — coming soon.</div>`;
+    else if (!s.latest && !s.installed) notes.innerHTML = `<div class="empty">This ${g.info.kind === "tool" ? "tool" : "game"} isn't available yet — coming soon.</div>`;
     else notes.innerHTML = (s.notes||"").trim() ? renderNotes(s.notes) : `<div class="empty">No patch notes to show.</div>`;
 
     // actions
@@ -289,7 +289,10 @@
     bar.innerHTML = `<div class="prog" data-prog><div class="bar"></div></div><div class="err" data-err></div>`;
     if (s.loading){ /* just the spinner in chips */ }
     else if (s.installed && s.latest && verNewer(s.latest, s.installed)){ bar.appendChild(mk("Update"," upd",()=>doUpdate(),"↓")); } // amber: an update should read at a glance (becomes Play once it lands)
-    else if (s.installed){ bar.appendChild(mk("Play",btnLight,()=>doPlay(),"▶")); }
+    // A tool is opened, not played. Same install and update path as any
+    // game — only the word and the glyph change.
+    else if (s.installed){ const tool = g.info.kind === "tool";
+      bar.appendChild(mk(tool?"Open":"Play",btnLight,()=>doPlay(),tool?"✎":"▶")); }
     else if (s.latest){ bar.appendChild(mk("Install",btnLight,()=>doUpdate(),"↓")); } // becomes Play once installed
     else { bar.appendChild(mk("Coming Soon","",null)); }
   }

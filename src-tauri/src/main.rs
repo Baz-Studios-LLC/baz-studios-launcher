@@ -92,6 +92,15 @@ struct Payload {
     into: &'static str,
 }
 
+/// What a card is: something to play, or something to work in. The only
+/// difference is the word on the button and where it sits on the shelf -
+/// a tool is still installed and updated exactly like a game.
+#[derive(PartialEq, Clone, Copy)]
+enum Kind {
+    Game,
+    Tool,
+}
+
 struct Game {
     slug: &'static str,        // stable id (folder name, UI key)
     name: &'static str,        // display name
@@ -99,6 +108,7 @@ struct Game {
     repo: &'static str,        // owner/name on GitHub (must be public)
     accent: &'static str,      // brand colour (hex) — drives the card's gradient / glow in the UI
     delivery: Delivery,        // web bundle vs native build
+    kind: Kind,                // a game to play, or a tool to work in
     /// A big companion file kept out of the update cycle. `None` for almost
     /// every game.
     payload: Option<Payload>,
@@ -117,6 +127,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        kind: Kind::Game,
         payload: None,
     },
     Game {
@@ -126,6 +137,7 @@ const GAMES: &[Game] = &[
         repo: "Baz-Studios-LLC/Wingman",
         accent: "#3a86ff",
         delivery: Delivery::Web { asset: "wingman-game.zip", port: 47824 },
+        kind: Kind::Game,
         payload: None,
     },
     Game {
@@ -141,6 +153,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        kind: Kind::Game,
         payload: None,
     },
     Game {
@@ -162,6 +175,7 @@ const GAMES: &[Game] = &[
         // beside its saves. The weights and their tokenizer live on the
         // fixed `models-1` release; the game runs fine without them, it
         // just keeps to its written lines.
+        kind: Kind::Game,
         payload: Some(Payload {
             tag: "models-1",
             // Just the weights: the tokenizer lives inside the GGUF since
@@ -178,6 +192,7 @@ const GAMES: &[Game] = &[
         repo: "Baz-Studios-LLC/Crashout",
         accent: "#ff5a34",
         delivery: Delivery::Web { asset: "crashout-game.zip", port: 47826 },
+        kind: Kind::Game,
         payload: None,
     },
     Game {
@@ -194,6 +209,7 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        kind: Kind::Game,
         payload: None,
     },
     Game {
@@ -211,6 +227,26 @@ const GAMES: &[Game] = &[
             mac: "-macos-aarch64.app.tar.gz",
             windows: "-windows-x86_64.zip",
         },
+        kind: Kind::Game,
+        payload: None,
+    },
+    Game {
+        slug: "opificium",
+        name: "Opificium",
+        tagline: "The maker's bench: draw a building by hand, pose a body, export both as files.",
+        repo: "Baz-Studios-LLC/Opificium",
+        // Workshop brass against all the games' colours: it should read as
+        // the odd one out on the shelf, because it is.
+        accent: "#b8863b",
+        // Rust + Bevy native build per platform, same delivery as the games.
+        delivery: Delivery::Native {
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
+        },
+        // A tool, not a game: it opens a project rather than a world, and
+        // it carries no game's content - the work lives in whichever
+        // game's repository it belongs to.
+        kind: Kind::Tool,
         payload: None,
     },
 ];
@@ -228,6 +264,8 @@ struct GameInfo {
     tagline: String,
     repo: String,
     accent: String,
+    /// "game" or "tool" - the UI says Play for one and Open for the other.
+    kind: String,
 }
 
 #[derive(Serialize)]
@@ -246,6 +284,10 @@ fn games() -> Vec<GameInfo> {
             slug: g.slug.to_string(),
             name: g.name.to_string(),
             tagline: g.tagline.to_string(),
+            kind: match g.kind {
+                Kind::Game => "game".to_string(),
+                Kind::Tool => "tool".to_string(),
+            },
             repo: g.repo.to_string(),
             accent: g.accent.to_string(),
         })
