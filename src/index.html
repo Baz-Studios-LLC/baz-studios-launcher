@@ -378,11 +378,13 @@
       {slug:"wingman",name:"Wingman",tagline:"A twin-stick shooter where you fly two ships at once.",repo:"Baz-Studios-LLC/Wingman",accent:"#3a86ff"},
       {slug:"violet-edge",name:"VIOLET EDGE",tagline:"A neon-vector Asteroids love letter — cut the field, hold the edge.",repo:"Baz-Studios-LLC/Violet-Edge",accent:"#8a5cff"},
       {slug:"crashout",name:"Crashout",tagline:"An isometric office-survival game — hold it together before you crash out.",repo:"Baz-Studios-LLC/Crashout",accent:"#ff5a34"},
+      {slug:"fly-on-the-wall",name:"Fly on the Wall",tagline:"A housefly in a family home. You can't understand a word they say — only watch.",repo:"Baz-Studios-LLC/Fly-on-the-Wall",accent:"#4f9d8a"},
     ]);
     if (cmd==="installed_version") return wait(500, slug==="wriftheart"?"0.6.45":null);
     if (cmd==="check_latest"){
       if (slug==="wriftheart") return wait(800,{version:"0.6.46",url:"#",notes:"## v0.6.46 — The Shard Held High\n- **Claiming a Wriftheart shard is now a moment** — held aloft with lore.\n- Songs must be learned before you can play them.\n- The Songbook no longer opens on a blank page."});
       if (slug==="wingman") return wait(800,{version:"0.1.0",url:"#",notes:"## Wingman v0.1.0\n- First playable build in the launcher.\n- Twin-ship twin-stick action."});
+      if (slug==="fly-on-the-wall") return wait(800,{version:"0.1.0",url:"#",notes:"## v0.1.0 — The flight test\n- A housefly, two rooms and a door.\n- **Hold right mouse to land** — contact only sticks while it is held.\n- Real speeds: 200 cm/s cruise, ~200 Hz wingbeat, a 6.5 mm fly."});
       if (slug==="violet-edge") return wait(800,{version:"0.4.2",url:"#",notes:"## v0.4.2 — Bigger small targets\n- **Small things are bigger now** — small asteroids, mines, and mobs grew ~35–40% so they're easier to hit.\n- The aim assist is gone; aiming is a pure skill again."});
       return wait(700, Promise.reject("no release")); // crashout -> coming soon
     }

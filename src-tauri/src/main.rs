@@ -196,6 +196,23 @@ const GAMES: &[Game] = &[
         },
         payload: None,
     },
+    Game {
+        slug: "fly-on-the-wall",
+        name: "Fly on the Wall",
+        tagline: "A housefly in a family home. You can't understand a word they say \u{2014} only watch.",
+        repo: "Baz-Studios-LLC/Fly-on-the-Wall",
+        // A housefly is not black: it is dark slate with a green sheen, and the
+        // greens were the only part of the shelf nobody had taken.
+        accent: "#4f9d8a",
+        // Rust + Bevy native build per platform, same delivery as WriftHeart.
+        // Its bundle carries an assets folder beside the binary, which changes
+        // nothing here \u{2014} the launcher installs the whole .app either way.
+        delivery: Delivery::Native {
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
+        },
+        payload: None,
+    },
 ];
 
 fn game_by_slug(slug: &str) -> Option<&'static Game> {
