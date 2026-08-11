@@ -180,6 +180,22 @@ const GAMES: &[Game] = &[
         delivery: Delivery::Web { asset: "crashout-game.zip", port: 47826 },
         payload: None,
     },
+    Game {
+        slug: "please-dont-shake",
+        name: "Please Don't Shake",
+        tagline: "An ant farm that digs its own tunnels — and one sign asking you not to shake it.",
+        // Private for now, so this reads "Coming soon" until it goes public and a
+        // release carries the native build. The launcher downloads unauthenticated.
+        repo: "Baz-Studios-LLC/please-dont-shake",
+        // The red marker on the sticker the game is named after.
+        accent: "#ca1e1b",
+        // Rust + Bevy native build per platform, same delivery as WriftHeart.
+        delivery: Delivery::Native {
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
+        },
+        payload: None,
+    },
 ];
 
 fn game_by_slug(slug: &str) -> Option<&'static Game> {
