@@ -231,6 +231,25 @@ const GAMES: &[Game] = &[
         payload: None,
     },
     Game {
+        slug: "ranger",
+        name: "Ranger",
+        tagline: "Raise monsters on a ranch, cross a continent, earn your Ranger License.",
+        repo: "Baz-Studios-LLC/ranger-game",
+        // Ranger green, and the only green left once the housefly took the
+        // teal - this one is the field rather than the sheen.
+        accent: "#5faa5c",
+        // Rust + Bevy native build per platform, same delivery as the rest.
+        // Its bundle carries an assets folder beside the binary because the
+        // world is read from it at runtime; the launcher installs the whole
+        // thing either way, so that changes nothing here.
+        delivery: Delivery::Native {
+            mac: "-macos-aarch64.app.tar.gz",
+            windows: "-windows-x86_64.zip",
+        },
+        kind: Kind::Game,
+        payload: None,
+    },
+    Game {
         slug: "opificium",
         name: "Opificium",
         tagline: "The maker's bench: draw a building by hand, pose a body, export both as files.",
