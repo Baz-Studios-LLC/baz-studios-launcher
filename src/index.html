@@ -191,7 +191,7 @@
   const lum=(r)=>(0.299*r[0]+0.587*r[1]+0.114*r[2])/255;
   const mono=(name)=>name.replace(/[^a-z]/gi,"").slice(0,2).toUpperCase();
 
-  const games = {};   // slug -> { info, rgb, light, state:{loading,installed,latest,url,notes} }
+  const games = {};   // slug -> { info, rgb, light, state:{loading,installed,latest,url,notes,trouble} }
   let order = [];      // slugs in catalog order
   let selected = null; // slug
   const busy = {};
@@ -257,7 +257,14 @@
     else if (s.installed){ const up = s.latest && verNewer(s.latest, s.installed);
       chips = `<span class="chip"><span class="dot ${up?'up':''}"></span>Installed <b>v${s.installed}</b></span>` + (up?`<span class="arr">→</span><span class="chip up"><b>v${s.latest}</b> ready</span>`:"");
     } else if (s.latest){ chips = `<span class="chip"><span class="dot off"></span>Not installed</span><span class="arr">→</span><span class="chip"><b>v${s.latest}</b></span>`; }
+    else if (s.trouble){
+      // Installed but unable to ask: say so rather than implying it is current.
+      chips = `<span class="chip"><span class="dot off"></span>Couldn't check for updates</span>`;
+    }
     else chips = `<span class="chip"><span class="dot off"></span>Coming soon</span>`;
+    if (s.trouble && s.installed){
+      chips = `<span class="chip"><span class="dot"></span>Installed <b>v${s.installed}</b></span><span class="arr">→</span><span class="chip"><span class="dot off"></span>Couldn't check</span>`;
+    }
 
     d.innerHTML = `
       <div class="hero" data-hero><span class="htext">${esc(g.info.name)}</span></div>
@@ -281,6 +288,10 @@
     const notes = d.querySelector("[data-notes]");
     if (s.loading) notes.innerHTML = `<div class="empty">Loading…</div>`;
     else if (!s.latest && !s.installed) notes.innerHTML = `<div class="empty">This ${g.info.kind === "tool" ? "tool" : "game"} isn't available yet — coming soon.</div>`;
+    // THE REASON GOES ON THE SCREEN. "No patch notes to show" was what a
+    // rate-limited launcher displayed, which tells the reader nothing and
+    // looks like a quiet release.
+    else if (s.trouble) notes.innerHTML = `<div class="empty">${esc(s.trouble)}</div>`;
     else notes.innerHTML = (s.notes||"").trim() ? renderNotes(s.notes) : `<div class="empty">No patch notes to show.</div>`;
 
     // actions
@@ -318,8 +329,15 @@
   async function refresh(slug){
     const g = games[slug]; g.state.loading = true; updateTab(slug); if (slug===selected) renderDetail();
     try { g.state.installed = await invoke("installed_version",{slug}); } catch { g.state.installed = null; }
-    try { const info = await invoke("check_latest",{slug}); g.state.latest = info.version; g.state.url = info.url; g.state.notes = info.notes||""; }
-    catch { g.state.latest = null; g.state.notes = ""; }
+    // A FAILED CHECK IS NOT "UP TO DATE", and this bare `catch` used to say it
+    // was: the version went null, the notes went blank, and the screen became
+    // indistinguishable from a launcher with nothing to do. Brett sat three
+    // versions behind looking at exactly that, and nothing anywhere said why.
+    try {
+      const info = await invoke("check_latest",{slug});
+      g.state.latest = info.version; g.state.url = info.url; g.state.notes = info.notes||""; g.state.trouble = "";
+    }
+    catch(e){ g.state.latest = null; g.state.notes = ""; g.state.trouble = String(e); }
     g.state.loading = false; updateTab(slug); if (slug===selected) renderDetail();
   }
   async function doUpdate(){
@@ -354,7 +372,7 @@
     checkLauncherUpdate(); // non-blocking: a popup offers any launcher update (no auto-relaunch)
     el("selfstat").textContent = "";
     let list = []; try { list = await invoke("games"); } catch {}
-    for (const info of list){ const rgb=hexRGB(info.accent); games[info.slug]={info,rgb,light:lum(rgb)<0.6,state:{loading:true,installed:null,latest:null,url:null,notes:""}}; order.push(info.slug); }
+    for (const info of list){ const rgb=hexRGB(info.accent); games[info.slug]={info,rgb,light:lum(rgb)<0.6,state:{loading:true,installed:null,latest:null,url:null,notes:"",trouble:""}}; order.push(info.slug); }
     buildSidebar();
     if (order.length){ selected = order[0]; order.forEach(updateTab); renderDetail(); }
     order.forEach(refresh);

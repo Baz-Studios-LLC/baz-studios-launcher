@@ -10,12 +10,13 @@
 // files still run anywhere a browser/webview can open them.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use tauri::{Manager, State, WindowEvent};
@@ -580,6 +581,20 @@ async fn check_latest(slug: String) -> Result<Latest, String> {
 /// Shared by the version check and by the payload fetch, so both are looking at
 /// the same release rather than two separate answers to the same question.
 async fn latest_release(game: &Game) -> Result<serde_json::Value, String> {
+    // ANSWERED FROM MEMORY IF IT WAS ASKED RECENTLY.
+    //
+    // GitHub allows SIXTY unauthenticated calls an hour PER IP, and this
+    // launcher spends them freely: every game checks on open, on every
+    // refresh, and again around an install. Brett hit the wall with a
+    // launcher stuck three versions behind and no way to tell - the API was
+    // answering 403 to every call it made, and the screen looked exactly like
+    // being up to date.
+    //
+    // A few minutes of memory is the difference between a handful of calls an
+    // hour and one per click.
+    if let Some(remembered) = remembered_release(game.repo) {
+        return Ok(remembered);
+    }
     let client = reqwest::Client::builder()
         .user_agent(UA)
         .build()
@@ -591,6 +606,23 @@ async fn latest_release(game: &Game) -> Result<serde_json::Value, String> {
         .send()
         .await
         .map_err(|e| e.to_string())?;
+    // THE ONE FAILURE WORTH NAMING. Anything else is a network having a bad
+    // day; this one is a wall that lasts an hour, is invisible from the
+    // outside, and is the likeliest thing to be wrong when a launcher will not
+    // update. The message travels all the way to the screen.
+    if resp.status() == reqwest::StatusCode::FORBIDDEN
+        || resp.status() == reqwest::StatusCode::TOO_MANY_REQUESTS
+    {
+        let spent = resp
+            .headers()
+            .get("x-ratelimit-remaining")
+            .and_then(|v| v.to_str().ok())
+            .is_some_and(|v| v == "0");
+        if spent {
+            return Err(RATE_LIMITED.to_string());
+        }
+        return Err(format!("GitHub returned {}", resp.status()));
+    }
     if !resp.status().is_success() {
         return Err(format!("GitHub returned {}", resp.status()));
     }
@@ -604,10 +636,43 @@ async fn latest_release(game: &Game) -> Result<serde_json::Value, String> {
             if rel["tag_name"].as_str().unwrap_or("").is_empty() {
                 continue;
             }
+            remember_release(game.repo, rel);
             return Ok(rel.clone());
         }
     }
     Err("no published game release found".into())
+}
+
+/// What the launcher says when GitHub has stopped answering it.
+///
+/// A sentence rather than a code, because it goes on the screen and the person
+/// reading it needs to know that nothing is broken and that waiting fixes it.
+const RATE_LIMITED: &str =
+    "GitHub is rate-limiting this machine (60 checks an hour). Version unknown until it clears — usually within the hour.";
+
+/// How long a release answer is worth trusting.
+///
+/// Long enough that opening the launcher, clicking about and installing
+/// something is ONE call rather than a dozen; short enough that a release
+/// pushed while the launcher is open is seen without a restart.
+const REMEMBER_FOR: Duration = Duration::from_secs(300);
+
+/// The last answer GitHub gave about each repo, and when.
+static REMEMBERED: Mutex<Option<HashMap<&'static str, (Instant, serde_json::Value)>>> =
+    Mutex::new(None);
+
+fn remembered_release(repo: &'static str) -> Option<serde_json::Value> {
+    let guard = REMEMBERED.lock().ok()?;
+    let (when, what) = guard.as_ref()?.get(repo)?;
+    (when.elapsed() < REMEMBER_FOR).then(|| what.clone())
+}
+
+fn remember_release(repo: &'static str, rel: &serde_json::Value) {
+    if let Ok(mut guard) = REMEMBERED.lock() {
+        guard
+            .get_or_insert_with(HashMap::new)
+            .insert(repo, (Instant::now(), rel.clone()));
+    }
 }
 
 /// Download a game's bundle and unpack it fresh into its game dir, then stamp the version.
