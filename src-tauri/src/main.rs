@@ -232,11 +232,16 @@ const GAMES: &[Game] = &[
         payload: None,
     },
     Game {
-        slug: "ranger",
-        name: "Ranger",
-        tagline: "Raise monsters on a ranch, cross a continent, earn your Ranger License.",
-        repo: "Baz-Studios-LLC/ranger-game",
-        // Ranger green, and the only green left once the housefly took the
+        slug: "copaimo",
+        name: "Copaimo",
+        tagline: "Raise monsters on a ranch, cross a continent, earn your Warden License.",
+        // Renamed from Ranger, repository and all — the player is a Warden now
+        // and the game is Copaimo, which were the same word before. GitHub
+        // redirects a renamed repo, so the old name would still have resolved,
+        // but pointing at what it IS beats relying on a redirect. The slug
+        // changed with it, which retires the old install folder below.
+        repo: "Baz-Studios-LLC/copaimo",
+        // Warden green, and the only green left once the housefly took the
         // teal - this one is the field rather than the sheen.
         accent: "#5faa5c",
         // Rust + Bevy native build per platform, same delivery as the rest.
@@ -323,6 +328,8 @@ fn games() -> Vec<GameInfo> {
 const RETIRED_SLUGS: &[&str] = &[
     // Egregore became Divus Factus.
     "egregore",
+    // Ranger became Copaimo: The Wardens Guild.
+    "ranger",
 ];
 
 /// Deletes retired install folders. Runs once, at startup, and is silent when
